@@ -1,6 +1,6 @@
 ## RecBole-MetaRec
 
-The document can be find in https://recbole-metarec-doc.readthedocs.io/en/latest/.
+The document can be found in https://recbole-metarec-doc.readthedocs.io/en/latest/.
 
 ## Introduction
 
@@ -25,6 +25,4 @@ Therefore, researches can:
 
 Before start, it is strongly recommended to realize how RecBole works, and the homepage of RecBole is https://recbole.io.
 
-The work flow is as following.
-
-![graph](/Users/zhangzeyu/Desktop/recbole_develop/document/graph.png)
+Details can be found in the package document.
