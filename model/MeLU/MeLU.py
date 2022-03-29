@@ -14,8 +14,8 @@ from copy import deepcopy
 from collections import OrderedDict
 from recbole.model.layers import MLPLayers
 from recbole.utils import InputType, FeatureSource, FeatureType
-from MetaModule.MetaRecommender import MetaRecommender
-from MetaModule.MetaUtils import GradCollector,EmbeddingTable
+from MetaRecommender import MetaRecommender
+from MetaUtils import GradCollector,EmbeddingTable
 
 class MeLU(MetaRecommender):
     '''

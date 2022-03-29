@@ -14,7 +14,7 @@ from collections import OrderedDict
 from recbole.utils import FeatureSource, set_color
 from recbole.data.interaction import Interaction
 from recbole.utils import get_gpu_usage
-from MetaModule.MetaTrainer import MetaTrainer
+from MetaTrainer import MetaTrainer
 
 class MeLUTrainer(MetaTrainer):
     '''

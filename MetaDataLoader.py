@@ -44,7 +44,7 @@ class MetaDataLoader(AbstractDataLoader):
             self.logger.warning('MetaDataLoader must shuffle the data.')
 
         self.uid_field = dataset.uid_field
-        self.user_list = self.getUserList()
+        self.user_list = self.getTaskIdList()
         self.taskDict=self.transformToTaskFormat()
 
     def transformToTaskFormat(self):
