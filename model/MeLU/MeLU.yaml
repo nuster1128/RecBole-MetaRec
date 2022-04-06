@@ -28,7 +28,7 @@ meta_args:
 
 # MeLU Parameters
 embedding_size: 32  # For 7 fields in the dataset.
-mlp_hidden_size: [224,64,64]
+mlp_hidden_size: [224,4,4]
 melu_args:
     local_lr: 0.000005  # 5e-6
     lr: 0.00005 #5e-5

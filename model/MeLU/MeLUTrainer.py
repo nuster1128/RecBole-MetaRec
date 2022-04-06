@@ -25,8 +25,6 @@ class MeLUTrainer(MetaTrainer):
 
     https://doi.org/10.1145/3292500.3330859
 
-    Note: Temporarily, we use FOMAML instead of full MAML and will correct soon.
-
     '''
     def __init__(self,config,model):
         super(MeLUTrainer, self).__init__(config,model)
@@ -62,11 +60,15 @@ class MeLUTrainer(MetaTrainer):
             totalLoss+=loss
 
             # This is SGD process.
-            newParams=OrderedDict()
-            for name,params in self.model.state_dict().items():
-                newParams[name]=params-self.lr*grad[name]
+            newModelParams=OrderedDict()
+            newEmbParams = OrderedDict()
+            for name,params in self.model.model.state_dict().items():
+                newModelParams[name]=params-self.lr*grad[name]
+            for name,params in self.model.embeddingTable.state_dict().items():
+                newEmbParams[name] = params - self.lr * grad[name]
 
-            self.model.load_state_dict(newParams)
+            self.model.model.load_state_dict(newModelParams)
+            self.model.embeddingTable.load_state_dict(newEmbParams)
 
             self.model.keepWeightParams = deepcopy(self.model.model.state_dict())
 

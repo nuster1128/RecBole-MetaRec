@@ -163,20 +163,22 @@ class EmbeddingTable(nn.Module):
     This is a data struct to embedding interactions.
     It supports 'token' and 'float' type.
     '''
-    def __init__(self,embeddingSize,dataset):
+    def __init__(self, embeddingSize, dataset, source=None):
         super(EmbeddingTable, self).__init__()
 
+        if source is None:
+            source = [FeatureSource.USER, FeatureSource.ITEM]
         self.dataset=dataset
         self.embeddingSize=embeddingSize
 
         self.embeddingDict = dict()
-        self.initialize()
+        self.initialize(source)
 
-    def initialize(self):
+    def initialize(self,source):
         '''
         Initialize the fields of embedding.
         '''
-        self.embeddingFields = self.dataset.fields(source=[FeatureSource.USER, FeatureSource.ITEM])
+        self.embeddingFields = self.dataset.fields(source=source)
         for field in self.embeddingFields:
             if self.fieldType(field) is FeatureType.TOKEN:
                 self.embeddingDict[field]=nn.Embedding(self.dataset.num(field),self.embeddingSize)
@@ -218,3 +220,85 @@ class EmbeddingTable(nn.Module):
             batchX.append(feature)
         batchX=torch.cat(batchX,dim=1)
         return batchX
+
+    def forward(self,interaction):
+        return self.embeddingAllFields(interaction)
+
+class MetaParams():
+    def __init__(self,paramStateDict):
+        self.nameList=[]
+        self.paramValue=[]
+        self.paramShape=OrderedDict()
+        for name,value in paramStateDict.items():
+            self.nameList.append(name)
+            self.paramValue.append(torch.reshape(value,(-1,)))
+            self.paramShape[name]=value.shape
+        self.paramValue=torch.cat(self.paramValue)
+
+    def update(self,paramStateDict):
+        self.nameList = []
+        self.paramValue = []
+        self.paramShape = OrderedDict()
+        for name, value in paramStateDict.items():
+            self.nameList.append(name)
+            self.paramValue.append(torch.reshape(value, (-1,)))
+            self.paramShape[name] = value.shape
+        self.paramValue = torch.cat(self.paramValue)
+
+    def destruct(self,paramValue=None):
+        if paramValue is None:
+            paramValue=self.paramValue
+        params=OrderedDict()
+        base=0
+        for name in self.nameList:
+            vol=torch.prod(torch.tensor(self.paramShape[name]))
+            value=paramValue[base:base+vol]
+            base+=vol
+            params[name]=value.reshape(self.paramShape[name])
+
+        return params
+
+    def destructGrad(self,grad):
+        output=[]
+        base=0
+        for name in self.nameList:
+            vol = torch.prod(torch.tensor(self.paramShape[name]))
+            value=grad[base:base+vol]
+            base+=vol
+            output.append(value.reshape(self.paramShape[name]))
+        return tuple(output)
+
+    def getGradVector(self,f,model,retain=False):
+        grad = torch.autograd.grad(f,model.parameters(),create_graph=retain,retain_graph=retain)
+        gradVector =torch.cat([torch.reshape(g,(-1,)) for g in grad])
+        return gradVector
+
+    def getOneStepSgdOutput(self,loss,model,lr,retain=False):
+        if len(loss.shape) == 0:
+            return self.destruct(self.paramValue-lr*self.getGradVector(loss,model,retain))
+
+    def getHessianMatrix(self,loss,model):
+        grad = torch.autograd.grad(loss, model.parameters(), retain_graph=True, create_graph=True)
+        grad = torch.cat([torch.reshape(g, (-1,)) for g in grad])
+        hessianMatrix = []
+        for item in grad:
+            secondGrad = torch.autograd.grad(item, model.parameters(), retain_graph=True, create_graph=True)
+            secondGrad = torch.cat([torch.reshape(g, (-1,)) for g in secondGrad])
+            hessianMatrix.append(secondGrad)
+        hessianMatrix = torch.stack(hessianMatrix)
+        return hessianMatrix
+
+    def getTaskGrad(self,loss_spt,model_spt,loss_qrt,model_qrt):
+        part1=self.getGradVector(loss_qrt,model_qrt)
+        hessianMatrix=self.getHessianMatrix(loss_spt,model_spt)
+        part2=torch.eye(hessianMatrix.shape[0])-hessianMatrix
+        taskGrad=torch.matmul(part2,part1).detach()
+        return self.destructGrad(taskGrad)
+
+    def get(self):
+        return self.destruct()
+
+    def print(self):
+        params=self.destruct()
+        for name,value in params.items():
+            print(name,value)

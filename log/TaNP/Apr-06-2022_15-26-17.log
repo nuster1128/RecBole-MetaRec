@@ -1,0 +1,144 @@
+Wed 06 Apr 2022 15:26:17 INFO  
+General Hyper Parameters:
+gpu_id = 0
+use_gpu = True
+seed = 2020
+state = INFO
+reproducibility = True
+data_path = dataset/ml-100k-local
+checkpoint_dir = saved
+show_progress = True
+save_dataset = False
+dataset_save_path = None
+save_dataloaders = False
+dataloaders_save_path = None
+log_wandb = False
+
+Training Hyper Parameters:
+epochs = 2
+train_batch_size = 32
+learner = adam
+learning_rate = 0.001
+neg_sampling = {'uniform': 1}
+eval_step = 1
+stopping_step = 10
+clip_grad_norm = None
+weight_decay = 0.0
+loss_decimal_place = 4
+
+Evaluation Hyper Parameters:
+eval_args = {'group_by': 'task', 'order': 'RO', 'split': {'RS': [0.8, 0.1, 0.1]}, 'mode': 'labeled'}
+repeatable = False
+metrics = ['NDCG']
+topk = [5]
+valid_metric = NDCG@5
+valid_metric_bigger = True
+eval_batch_size = 4096
+metric_decimal_place = 4
+
+Dataset Hyper Parameters:
+field_separator = 	
+seq_separator =  
+USER_ID_FIELD = user_id
+ITEM_ID_FIELD = item_id
+RATING_FIELD = rating
+TIME_FIELD = timestamp
+seq_len = None
+LABEL_FIELD = rating
+threshold = None
+NEG_PREFIX = neg_
+load_col = {'inter': ['user_id', 'item_id', 'rating'], 'item': ['item_id', 'movie_title', 'release_year', 'class'], 'user': ['user_id', 'age', 'gender', 'occupation', 'zip_code']}
+unload_col = None
+unused_col = None
+additional_feat_suffix = None
+rm_dup_inter = None
+val_interval = None
+filter_inter_by_user_or_item = True
+user_inter_num_interval = [13, 100]
+item_inter_num_interval = [0,inf)
+alias_of_user_id = None
+alias_of_item_id = None
+alias_of_entity_id = None
+alias_of_relation_id = None
+preload_weight = None
+normalize_field = None
+normalize_all = None
+ITEM_LIST_LENGTH_FIELD = item_length
+LIST_SUFFIX = _list
+MAX_ITEM_LIST_LENGTH = 50
+POSITION_FIELD = position_id
+HEAD_ENTITY_ID_FIELD = head_id
+TAIL_ENTITY_ID_FIELD = tail_id
+RELATION_ID_FIELD = relation_id
+ENTITY_ID_FIELD = entity_id
+benchmark_filename = None
+
+Other Hyper Parameters: 
+wandb_project = recbole
+require_pow = False
+MODEL_TYPE = <function Module.type at 0x0000019A177F50D8>
+meta_args = {'support_num': 'none', 'query_num': 10}
+embedding = 32
+encoderHiddenDim = 32
+rDim = 32
+rHiddenDim = 32
+zDim = 32
+decodeHiddenDim = 32
+k = 10
+alpha = 1.0
+lambda = 1.0
+MODEL_INPUT_TYPE = InputType.POINTWISE
+eval_type = EvaluatorType.RANKING
+device = cpu
+train_neg_sample_args = {'strategy': 'by', 'by': 1, 'distribution': 'uniform', 'dynamic': 'none'}
+eval_neg_sample_args = {'strategy': 'none', 'distribution': 'none'}
+
+
+Wed 06 Apr 2022 15:26:17 INFO  ml-100k-local
+The number of users: 583
+Average actions of users: 44.292096219931274
+The number of items: 1683
+Average actions of items: 20.218039215686275
+The number of inters: 25778
+The sparsity of the dataset: 97.37277935239796%
+Remain Fields: ['user_id', 'item_id', 'rating', 'age', 'gender', 'occupation', 'zip_code', 'movie_title', 'release_year', 'class']
+Wed 06 Apr 2022 15:26:17 INFO  [Training]: train_batch_size = [32] negative sampling: [{'uniform': 1}]
+Wed 06 Apr 2022 15:26:17 INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'group_by': 'task', 'order': 'RO', 'split': {'RS': [0.8, 0.1, 0.1]}, 'mode': 'labeled'}]
+Wed 06 Apr 2022 15:26:17 INFO  TaNP(
+  (taskUserEmbedding): EmbeddingTable(
+    (age): Embedding(62, 32)
+    (gender): Embedding(3, 32)
+    (occupation): Embedding(22, 32)
+    (zip_code): Embedding(523, 32)
+  )
+  (taskItemEmbedding): EmbeddingTable(
+    (movie_title): Embedding(1660, 32)
+    (release_year): Embedding(74, 32)
+    (class): Embedding(217, 32)
+  )
+  (encoderMLP2): Sequential(
+    (0): Linear(in_features=225, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  )
+  (encoderMLP1): Sequential(
+    (0): Linear(in_features=225, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  )
+  (zVectorGenerator): ZVectorGenerator(
+    (W_s): Linear(in_features=32, out_features=32, bias=False)
+    (W_u): Linear(in_features=32, out_features=32, bias=False)
+    (W_sigma): Linear(in_features=32, out_features=32, bias=False)
+  )
+  (taNPRec): TaNPRec(
+    (hiddenLinear): Linear(in_features=256, out_features=32, bias=True)
+    (hiddenLambda): Linear(in_features=32, out_features=32, bias=False)
+    (hiddenBeta): Linear(in_features=32, out_features=32, bias=False)
+    (outputLinear): Linear(in_features=32, out_features=1, bias=True)
+    (outputLambda): Linear(in_features=32, out_features=1, bias=False)
+    (outputBeta): Linear(in_features=32, out_features=1, bias=False)
+  )
+  (aMatrix): AMatrix()
+)
+Trainable parameters: 112289

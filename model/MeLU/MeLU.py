@@ -15,7 +15,7 @@ from collections import OrderedDict
 from recbole.model.layers import MLPLayers
 from recbole.utils import InputType, FeatureSource, FeatureType
 from MetaRecommender import MetaRecommender
-from MetaUtils import GradCollector,EmbeddingTable
+from MetaUtils import GradCollector,EmbeddingTable,MetaParams
 
 class MeLU(MetaRecommender):
     '''
@@ -25,8 +25,6 @@ class MeLU(MetaRecommender):
     Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2019: 1073-1082.
 
     https://doi.org/10.1145/3292500.3330859
-
-    Note: Temporarily, we use FOMAML instead of full MAML and will correct soon.
 
     '''
     input_type = InputType.POINTWISE
@@ -41,9 +39,14 @@ class MeLU(MetaRecommender):
             MLPLayers(self.MLPHiddenSize),
             nn.Linear(self.MLPHiddenSize[-1],1)
         )
+        self.qrt_model = nn.Sequential(
+            MLPLayers(self.MLPHiddenSize),
+            nn.Linear(self.MLPHiddenSize[-1], 1)
+        )
 
         self.embeddingTable=EmbeddingTable(self.embedding_size,self.dataset)
-        self.metaGradCollector=GradCollector(list(self.state_dict().keys()))
+        self.metaGradCollector=GradCollector(list(self.model.state_dict().keys())+list(self.embeddingTable.state_dict().keys()))
+        self.modelMetaParams=MetaParams(self.model.state_dict())
 
         self.keepWeightParams = deepcopy(self.model.state_dict())
 
@@ -57,7 +60,7 @@ class MeLU(MetaRecommender):
     def fieldsEmb(self,interaction):
         return self.embeddingTable.embeddingAllFields(interaction)
 
-    def forward(self,spt_x,spt_y,qrt_x):
+    def forward(self, spt_x, spt_y, qrt_x):
         '''
         Batch forward process includes fine-tune with spt. and predict with qrt.
 
@@ -67,20 +70,27 @@ class MeLU(MetaRecommender):
         :return qrt_t(torch.Tensor): The prediction of qrt.
         '''
 
+        # Copy meta parameters into model.
+        self.model.load_state_dict(self.keepWeightParams)
+
         originWeightParams = list(self.model.state_dict().values())
         paramNames = self.model.state_dict().keys()
-        fastWeightParams=OrderedDict()
+        fastWeightParams = OrderedDict()
 
-        spt_y_predict=self.model(spt_x)
-        localLoss=F.mse_loss(spt_y_predict,spt_y)
+        # Calculate task-specific parameters.
+        spt_y_predict = self.model(spt_x)
+        localLoss = F.mse_loss(spt_y_predict, spt_y)
         self.model.zero_grad()
-        grad=torch.autograd.grad(localLoss,self.model.parameters(),create_graph=True,retain_graph=True)
+        grad = torch.autograd.grad(localLoss, self.model.parameters())
 
-        for index,name in enumerate(paramNames):
-            fastWeightParams[name]=originWeightParams[index]-self.localLr*grad[index]
+        for index, name in enumerate(paramNames):
+            fastWeightParams[name] = originWeightParams[index] - self.localLr * grad[index]
 
-        self.model.load_state_dict(fastWeightParams)        #Simplify to FOMAML @Nuster
-        qrt_y_predict=self.model(qrt_x)
+        # Load task-specific parameters and make prediction.
+        self.model.load_state_dict(fastWeightParams)
+        qrt_y_predict = self.model(qrt_x)
+
+        self.model.load_state_dict(self.keepWeightParams)
 
         return qrt_y_predict
 
@@ -88,14 +98,34 @@ class MeLU(MetaRecommender):
         totalLoss=torch.tensor(0.0)
         for task in taskBatch:
             spt_x, spt_y, qrt_x, qrt_y=self.taskDesolveEmb(task)
-            self.keepWeightParams = deepcopy(self.model.state_dict())   # Params into cache
-            qrt_y_predict=self.forward(spt_x,spt_y,qrt_x)
-            loss=F.mse_loss(qrt_y_predict,qrt_y)
 
-            grad=torch.autograd.grad(loss,self.parameters())
+            # Calculate MAML Loss of model(network)
+            self.model.load_state_dict(self.keepWeightParams)
 
-            self.metaGradCollector.addGrad(grad)
-            totalLoss+=loss.detach()
+            self.modelMetaParams.update(self.model.state_dict())
+
+            spt_y_predict = self.model(spt_x)
+            spt_loss = F.mse_loss(spt_y_predict, spt_y)
+
+            taskSpecificParams = self.modelMetaParams.getOneStepSgdOutput(spt_loss, self.model, self.localLr, retain=True)
+            self.qrt_model.load_state_dict(taskSpecificParams)
+
+            qrt_y_predict=self.qrt_model(qrt_x)
+            qrt_loss=F.mse_loss(qrt_y_predict,qrt_y)
+
+            gradModel = self.modelMetaParams.getTaskGrad(spt_loss, self.model, qrt_loss, self.qrt_model)
+
+            ## Calculate the grad of Embedding Table
+            self.model.load_state_dict(taskSpecificParams)
+            qrt_y_predict = self.model(qrt_x)
+
+            qrt_loss=F.mse_loss(qrt_y_predict,qrt_y)
+            self.embeddingTable.zero_grad()
+            gradEmb = torch.autograd.grad(qrt_loss, self.embeddingTable.parameters())
+
+            ## Send to Meta Collector
+            self.metaGradCollector.addGrad(gradModel+gradEmb)
+            totalLoss+=qrt_loss.detach()
 
             self.model.load_state_dict(self.keepWeightParams)           # Params back
         self.metaGradCollector.averageGrad(self.config['train_batch_size'])
@@ -103,14 +133,12 @@ class MeLU(MetaRecommender):
         return totalLoss,self.metaGradCollector.dumpGrad()
 
     def predict(self, spt_x,spt_y,qrt_x):
-        self.keepWeightParams = deepcopy(self.model.state_dict())
 
         spt_x = self.embeddingTable.embeddingAllFields(spt_x)
         spt_y = spt_y.view(-1, 1)
         qrt_x = self.embeddingTable.embeddingAllFields(qrt_x)
 
         predict_qrt_y=self.forward(spt_x,spt_y,qrt_x)
-        self.model.load_state_dict(self.keepWeightParams)
 
         return predict_qrt_y
 
