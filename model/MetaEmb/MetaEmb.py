@@ -144,8 +144,6 @@ class MetaEmb(MetaRecommender):
         totalLoss /= self.config['train_batch_size']
         return totalLoss, self.metaGradCollector.dumpGrad()
 
-
-
     def predict(self, spt_x,spt_y,qrt_x):
         predict_qrt_y=self.forward(spt_x,spt_y,qrt_x)[:,1]
 

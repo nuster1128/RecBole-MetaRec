@@ -3,13 +3,13 @@ from recbole.config import Config
 from MetaUtils import *
 '''from model.MeLU.MeLUTrainer import MeLUTrainer
 from model.MeLU.MeLU import MeLU'''
-from model.MWUF.MWUF import MWUF
-from model.MWUF.MWUFTrainer import MWUFTrainer
+from model.NLBA.NLBA import NLBA
+from model.NLBA.NLBATrainer import NLBATrainer
 
 if __name__ == '__main__':
     '''config = Config(model=MeLU, dataset='ml-100k-local',config_file_list=['model/MeLU/MeLU.yaml'])
     init_seed(config['seed'], config['reproducibility'])'''
-    config = Config(model=MWUF, dataset='ml-100k-local-CTR', config_file_list=['model/MWUF/MWUF.yaml'])
+    config = Config(model=NLBA, dataset='ml-100k-local-CTR', config_file_list=['model/NLBA/NLBA.yaml'])
     init_seed(config['seed'], config['reproducibility'])
 
     # logger initialization
@@ -27,12 +27,12 @@ if __name__ == '__main__':
 
     # model loading and initialization
     '''model = MeLU(config, train_data.dataset).to(config['device'])'''
-    model = MWUF(config, train_data.dataset).to(config['device'])
+    model = NLBA(config, train_data.dataset).to(config['device'])
     logger.info(model)
 
     # trainer loading and initialization
     '''trainer = MeLUTrainer(config, model)'''
-    trainer = MWUFTrainer(config, model)
+    trainer = NLBATrainer(config, model)
 
     # model training
     best_valid_score, best_valid_result = trainer.fit(train_data, valid_data)
