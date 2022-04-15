@@ -1,9 +1,9 @@
-# @Time   : 2022/3/23
+# @Time   : 2022/4/6
 # @Author : Zeyu Zhang
 # @Email  : wfzhangzeyu@163.com
 
 """
-recbole.MetaModule.model.TaNP
+recbole.MetaModule.model.MetaEmb
 ##########################
 """
 
@@ -16,14 +16,15 @@ from recbole.data.interaction import Interaction
 from recbole.utils import get_gpu_usage
 from MetaTrainer import MetaTrainer
 
-class TaNPTrainer(MetaTrainer):
+class MetaEmbTrainer(MetaTrainer):
 
     def __init__(self,config,model):
-        super(TaNPTrainer, self).__init__(config,model)
+        super(MetaEmbTrainer, self).__init__(config,model)
 
         self.userFields = model.dataset.fields(source=[FeatureSource.USER])
         self.itemFields = model.dataset.fields(source=[FeatureSource.ITEM])
-        self.yField = model.RATING
+        self.yField = model.LABEL
+        self.userIdField=self.config['USER_ID_FIELD']
 
     def taskDesolve(self, task):
         spt_x_user, spt_x_item, qrt_x_user, qrt_x_item = OrderedDict(), OrderedDict(), OrderedDict(), OrderedDict()
@@ -35,10 +36,12 @@ class TaNPTrainer(MetaTrainer):
             qrt_x_item[field] = task.qrt[field]
         spt_y = task.spt[self.yField]
         qrt_y = task.qrt[self.yField]
+        spt_x_userid = task.spt[self.userIdField]
+        qrt_x_userid = task.qrt[self.userIdField]
 
         spt_x_user, spt_x_item, qrt_x_user, qrt_x_item = Interaction(spt_x_user), Interaction(spt_x_item), Interaction(
             qrt_x_user), Interaction(qrt_x_item)
-        return (spt_x_user, spt_x_item), spt_y,(qrt_x_user, qrt_x_item), qrt_y
+        return (spt_x_userid,spt_x_user, spt_x_item), spt_y,(qrt_x_userid,qrt_x_user, qrt_x_item), qrt_y
 
     def _train_epoch(self, train_data, epoch_idx, loss_func=None, show_progress=False):
         self.model.train()
@@ -51,18 +54,24 @@ class TaNPTrainer(MetaTrainer):
             ) if show_progress else train_data
         )
         totalLoss=torch.tensor(0.0)
+        # PreTrain
+        if epoch_idx == 0:
+            for ep in range(self.config['pretrainEpoch']):
+                for batch_idx, taskBatch in enumerate(iter_data):
+                    taskBatch = [self.taskDesolve(task) for task in taskBatch]
+                    self.model.pretrain(taskBatch)
+
+        # Train
         for batch_idx, taskBatch in enumerate(iter_data):
             taskBatch = [self.taskDesolve(task) for task in taskBatch]
             loss, grad = self.model.calculate_loss(taskBatch)
             totalLoss+=loss
 
-            self.model.load_state_dict(deepcopy(self.model.metaParams))
-
             newParams = OrderedDict()
-            for name, params in self.model.state_dict().items():
-                newParams[name] = (params - self.config['lr'] * grad[name]).detach()
+            for name, params in self.model.embeddingGenerator.mlp.state_dict().items():
+                newParams[name] = params - self.config['lr'] * grad[name]
 
-            self.model.metaParams=deepcopy(newParams)
+            self.model.embeddingGenerator.mlp.load_state_dict(newParams)
 
             if self.gpu_available and show_progress:
                 iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))

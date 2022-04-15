@@ -3,13 +3,13 @@ from recbole.config import Config
 from MetaUtils import *
 '''from model.MeLU.MeLUTrainer import MeLUTrainer
 from model.MeLU.MeLU import MeLU'''
-from model.TaNP.TaNPTrainer import TaNPTrainer
-from model.TaNP.TaNP import TaNP
+from model.MWUF.MWUF import MWUF
+from model.MWUF.MWUFTrainer import MWUFTrainer
 
 if __name__ == '__main__':
     '''config = Config(model=MeLU, dataset='ml-100k-local',config_file_list=['model/MeLU/MeLU.yaml'])
     init_seed(config['seed'], config['reproducibility'])'''
-    config = Config(model=TaNP, dataset='ml-100k-local', config_file_list=['model/TaNP/TaNP.yaml'])
+    config = Config(model=MWUF, dataset='ml-100k-local-CTR', config_file_list=['model/MWUF/MWUF.yaml'])
     init_seed(config['seed'], config['reproducibility'])
 
     # logger initialization
@@ -23,15 +23,16 @@ if __name__ == '__main__':
 
     # dataset splitting
     train_data, valid_data, test_data = meta_data_preparation(config, dataset)
+    logger.info(train_data)
 
     # model loading and initialization
     '''model = MeLU(config, train_data.dataset).to(config['device'])'''
-    model = TaNP(config, train_data.dataset).to(config['device'])
+    model = MWUF(config, train_data.dataset).to(config['device'])
     logger.info(model)
 
     # trainer loading and initialization
     '''trainer = MeLUTrainer(config, model)'''
-    trainer = TaNPTrainer(config, model)
+    trainer = MWUFTrainer(config, model)
 
     # model training
     best_valid_score, best_valid_result = trainer.fit(train_data, valid_data)

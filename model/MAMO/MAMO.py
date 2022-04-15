@@ -183,7 +183,7 @@ class MAMO(MetaRecommender):
     def calculate_loss(self, taskBatch):
         totalLoss = torch.tensor(0.0)
         for task in taskBatch:
-            (spt_x_user,spt_x_item), (qrt_x_user, qrt_x_item),spt_y,qrt_y = task
+            (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y = task
 
             predict_qry_y, gradVecForMU,attention_u,spt_x_userProfile,MuI=self.forward(spt_x_user,spt_x_item, qrt_x_user, qrt_x_item,spt_y)
 
@@ -204,7 +204,7 @@ class MAMO(MetaRecommender):
         return totalLoss, self.metaGradCollector.dumpGrad()
 
     def predict(self, spt_x,spt_y,qrt_x):
-        (spt_x_user,spt_x_item), (qrt_x_user, qrt_x_item),spt_y=spt_x,spt_y,qrt_x
+        (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item)=spt_x,spt_y,qrt_x
 
         predict_qry_y,_,_,_,_=self.forward(spt_x_user,spt_x_item,qrt_x_user,qrt_x_item,spt_y)
 

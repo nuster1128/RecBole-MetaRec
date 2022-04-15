@@ -35,6 +35,7 @@ class MetaRecommender(AbstractRecommender):
         self.USER_ID = config['USER_ID_FIELD']
         self.ITEM_ID = config['ITEM_ID_FIELD']
         self.RATING = config['RATING_FIELD']
+        self.LABEL = config['LABEL_FIELD']
 
         self.embedding_size = config['embedding_size']
         self.device = config['device']

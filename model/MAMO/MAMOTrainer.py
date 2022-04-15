@@ -36,7 +36,7 @@ class MAMOTrainer(MetaTrainer):
         qrt_y = task.qrt[self.yField]
 
         spt_x_user,spt_x_item, qrt_x_user, qrt_x_item = Interaction(spt_x_user),Interaction(spt_x_item), Interaction(qrt_x_user),Interaction(qrt_x_item)
-        return (spt_x_user,spt_x_item), (qrt_x_user, qrt_x_item),spt_y,qrt_y
+        return (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y
 
     def _train_epoch(self, train_data, epoch_idx, loss_func=None, show_progress=False):
         self.model.train()

@@ -126,7 +126,7 @@ class TaNP(MetaRecommender):
         self.load_state_dict(deepcopy(self.metaParams))
         for task in taskBatch:
 
-            (spt_x_user, spt_x_item), (qrt_x_user, qrt_x_item), spt_y, qrt_y = task
+            (spt_x_user, spt_x_item), spt_y,(qrt_x_user, qrt_x_item), qrt_y = task
             spt_y = spt_y.view(-1, 1)
 
             spt_x_user=self.taskUserEmbedding.embeddingAllFields(spt_x_user)
@@ -195,7 +195,7 @@ class TaNP(MetaRecommender):
         return totalLoss, self.metaGradCollector.dumpGrad()
 
     def predict(self, spt_x,spt_y,qrt_x):
-        (spt_x_user, spt_x_item), (qrt_x_user, qrt_x_item), spt_y = spt_x, spt_y, qrt_x
+        (spt_x_user, spt_x_item), spt_y,(qrt_x_user, qrt_x_item) = spt_x, spt_y, qrt_x
 
         spt_y = spt_y.view(-1, 1)
 
