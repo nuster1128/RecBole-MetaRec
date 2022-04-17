@@ -1,0 +1,10 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+FOMeLU,ml-100k-local,local_lr(5e-06);lr(5e-05);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(5e-06);lr(0.005);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(5e-06);lr(0.05);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.0005);lr(5e-05);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.0005);lr(0.005);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.0005);lr(0.05);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.005);lr(5e-05);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.005);lr(0.005);,0.5138,0.5138,1.0,0.5136,0.7141
+FOMeLU,ml-100k-local,local_lr(0.005);lr(0.05);,0.5138,0.5138,1.0,0.5136,0.7141

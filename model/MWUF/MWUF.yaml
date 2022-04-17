@@ -10,7 +10,7 @@ load_col:
 user_inter_num_interval: [13,100]
 
 # Training and evaluation config
-epochs: 2   # 30
+epochs: 50   # 30
 train_batch_size: 32
 valid_metric: 'AUC'
 
@@ -30,7 +30,7 @@ meta_args:
 embedding: 32
 indexEmbDim: 8
 modelRecHiddenDim: 32
-pretrainEpoch: 2
+pretrainEpoch: 20
 pretrainLr: 0.0001
 scaleHiddenDim: 32
 shiftHiddenDim: 32

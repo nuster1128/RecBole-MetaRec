@@ -1,0 +1,10 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MAMO,ml-100k-local,alpha(0.1);beta(0.05);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.1);beta(0.1);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.1);beta(0.2);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.2);beta(0.05);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.2);beta(0.1);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.2);beta(0.2);,0.6103,0.6103,1.0,0.6136,0.7945
+MAMO,ml-100k-local,alpha(0.5);beta(0.05);,0.5276,0.5276,1.0,0.5564,0.7922
+MAMO,ml-100k-local,alpha(0.5);beta(0.1);,0.5138,0.5138,1.0,0.5368,0.7511
+MAMO,ml-100k-local,alpha(0.5);beta(0.2);,0.5345,0.5345,1.0,0.5577,0.7914

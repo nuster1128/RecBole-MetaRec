@@ -204,7 +204,7 @@ class EmbeddingTable(nn.Module):
         if self.fieldType(field) is FeatureType.TOKEN:
             return self.embeddingDict[field](batchX)
         else:
-            return batchX
+            return torch.reshape(batchX,shape=(batchX.shape[0],1))
 
     def embeddingAllFields(self,interaction):
         '''

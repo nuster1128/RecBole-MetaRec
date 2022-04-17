@@ -10,9 +10,9 @@ load_col:
 user_inter_num_interval: [13,100]
 
 # Training and evaluation config
-epochs: 2   # 30
+epochs: 50   # 30
 train_batch_size: 32
-valid_metric: 'AUC'
+valid_metric: mrr@5
 
 # Evaluate config
 eval_args:
@@ -32,6 +32,6 @@ embeddingHiddenDim: 64
 lr: 0.0001
 
 # Metrics
-metrics: ['AUC']
+metrics: ['precision','recall','hit','ndcg','mrr']
 metric_decimal_place: 4
 topk: 5

@@ -10,9 +10,10 @@ load_col:
 user_inter_num_interval: [13,100]
 
 # Training and evaluation config
-epochs: 2   # 30
+seed: 1128
+epochs: 50
 train_batch_size: 32
-valid_metric: 'NDCG@5'
+valid_metric: mrr@5
 
 # Evaluate config
 eval_args:
@@ -27,13 +28,13 @@ meta_args:
     query_num: 10
 
 # MeLU Parameters
-embedding_size: 32  # For 7 fields in the dataset.
+embedding_size: 32
 mlp_hidden_size: [224,64,64]
 melu_args:
-    local_lr: 0.000005  # 5e-6
-    lr: 0.00005 #5e-5
+    local_lr: 0.000005
+    lr: 0.00005
 
 # Metrics
-metrics: ['NDCG']
+metrics: ['precision','recall','hit','ndcg','mrr']
 metric_decimal_place: 4
 topk: 5
