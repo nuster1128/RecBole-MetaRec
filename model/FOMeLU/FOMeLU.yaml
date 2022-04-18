@@ -29,7 +29,7 @@ meta_args:
 
 # MeLU Parameters
 embedding_size: 32
-mlp_hidden_size: [224,64,64]
+mlp_hidden_size: [64,64]
 melu_args:
     local_lr: 0.000005
     lr: 0.00005

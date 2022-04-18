@@ -8,6 +8,8 @@ def runSingleModel(modelName,datasetName,param_dict,logger=False):
         modelName + 'Trainer')
     modelClass = importlib.import_module('model.' + modelName + '.' + modelName).__getattribute__(modelName)
     config_file_listPath = ['model/' + modelName + '/' + modelName + '.yaml']
+    if datasetName == 'book-crossing' or datasetName == 'book-crossing-CTR':
+        config_file_listPath = ['model/' + modelName + '/' + modelName + '-BK.yaml']
 
     config = Config(model=modelClass, dataset=datasetName, config_file_list=config_file_listPath,config_dict=param_dict)
     init_seed(config['seed'], config['reproducibility'])
@@ -99,7 +101,7 @@ def getDetail(parameter_dict):
         detail+=k+'('+str(v)+');'
     return detail
 
-def finetuneSingleModel(modelName,datasetName,tuneDict):
+def finetuneSingleModel(modelName,datasetName,tuneDict,logger=False):
     oriDTN=datasetName
     valueMetrics = ['mae']
     if typeDict[modelName] == 'click':
@@ -112,8 +114,8 @@ def finetuneSingleModel(modelName,datasetName,tuneDict):
     paramList=[]
     dfs(paramList,[],values)
 
-    # board=[['ModelName','Dataset','Detail']+valueMetrics+rankingMetrics]
-    board = [['ModelName', 'Dataset', 'Detail']+ rankingMetrics]
+    board=[['ModelName','Dataset','Detail']+valueMetrics+rankingMetrics]
+    # board = [['ModelName', 'Dataset', 'Detail']+ rankingMetrics]
 
     print(modelName,'start with',len(paramList),'groups.')
     for index,param in enumerate(paramList):
@@ -123,15 +125,15 @@ def finetuneSingleModel(modelName,datasetName,tuneDict):
         parameter_dict['epochs']=50
         parameter_dict['metrics']=rankingMetrics
         parameter_dict['valid_metric']='mrr@5'
-        rankingResult=runSingleModel(modelName,datasetName,parameter_dict)
+        rankingResult=runSingleModel(modelName,datasetName,parameter_dict,logger)
 
-        # parameter_dict['metrics']=valueMetrics
-        # parameter_dict['valid_metric'] = 'mae'
-        # valueResult=runSingleModel(modelName,datasetName,parameter_dict)
-        # valueResult.update(rankingResult)
+        parameter_dict['metrics']=valueMetrics
+        parameter_dict['valid_metric'] = 'mae'
+        valueResult=runSingleModel(modelName,datasetName,parameter_dict,logger)
+        valueResult.update(rankingResult)
 
-        # board.append([modelName]+[datasetName]+[detail]+[v for k,v in valueResult.items()])
-        board.append([modelName] + [datasetName] + [detail] + [v for k, v in rankingResult.items()])
+        board.append([modelName]+[datasetName]+[detail]+[v for k,v in valueResult.items()])
+        # board.append([modelName] + [datasetName] + [detail] + [v for k, v in rankingResult.items()])
         print('Finish group',index)
 
     path='performance/'+oriDTN+'/'+modelName+'.csv'
@@ -140,13 +142,14 @@ def finetuneSingleModel(modelName,datasetName,tuneDict):
         csvwriter.writerows(board)
     print(modelName,'finish.')
 
-def fintuneAllModels(modelList,datasetName):
+def fintuneAllModels(modelList,datasetName,logger=False):
     for modelName in modelList:
         tuneDict = eval(modelName + 'TuneDict')
-        finetuneSingleModel(modelName, datasetName, tuneDict)
+        finetuneSingleModel(modelName, datasetName, tuneDict,logger)
 
 if __name__ == '__main__':
-    modelList = ['FOMeLU','MAMO','TaNP','LWA','NLBA','MetaEmb','MWUF']
-    datasetName='ml-1m-local'
-    fintuneAllModels(modelList,datasetName)
+    # modelList = ['FOMeLU','MAMO','TaNP','LWA','NLBA','MetaEmb','MWUF']
+    modelList = ['MWUF']
+    datasetName='book-crossing'
+    fintuneAllModels(modelList,datasetName,logger=True)
 

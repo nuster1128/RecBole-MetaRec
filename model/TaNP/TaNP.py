@@ -18,14 +18,14 @@ from MetaRecommender import MetaRecommender
 from MetaUtils import GradCollector,EmbeddingTable
 
 class AMatrix(nn.Module):
-    def __init__(self,rDim,k,alpha):
+    def __init__(self,device,rDim,k,alpha):
         super(AMatrix, self).__init__()
 
         self.rDim=rDim
         self.k=k
         self.alpha=alpha
 
-        self.matrix=torch.nn.Parameter(torch.randn(size=(self.k,self.rDim)))
+        self.matrix=torch.nn.Parameter(torch.randn(size=(self.k,self.rDim))).to(device)
 
     def forward(self,t_i):
         vectorNorms=torch.norm(t_i-self.matrix,dim=1)
@@ -37,9 +37,10 @@ class AMatrix(nn.Module):
         return c_i,attentionVec
 
 class ZVectorGenerator(nn.Module):
-    def __init__(self,rDim,zDim):
+    def __init__(self,device,rDim,zDim):
         super(ZVectorGenerator, self).__init__()
 
+        self.device=device
         self.rDim=rDim
         self.zDim=zDim
         self.W_s=nn.Linear(rDim,rDim,bias=False)
@@ -47,7 +48,7 @@ class ZVectorGenerator(nn.Module):
         self.W_sigma=nn.Linear(rDim,zDim,bias=False)
 
     def generateEpsilon(self):
-        return torch.randn(size=(self.zDim,))
+        return torch.randn(size=(self.zDim,)).to(self.device)
 
     def forward(self,r_i):
         new_r_i=F.relu(self.W_s(r_i))
@@ -87,6 +88,7 @@ class TaNP(MetaRecommender):
     def __init__(self,config,dataset):
         super(TaNP, self).__init__(config,dataset)
 
+        self.device=self.config.final_config_dict['device']
         self.embedding_size=self.config['embedding']
         self.encoderHiddenDim=self.config['encoderHiddenDim']
         self.rDim=self.config['rDim']
@@ -96,21 +98,21 @@ class TaNP(MetaRecommender):
         self.taskItemEmbedding=EmbeddingTable(self.embedding_size,dataset,source=[FeatureSource.ITEM])
 
         self.encoderMLP2=nn.Sequential(
-            nn.Linear(7*self.embedding_size+1,self.encoderHiddenDim),
+            nn.Linear(self.taskUserEmbedding.getAllDim()+self.taskItemEmbedding.getAllDim()+1,self.encoderHiddenDim),
             nn.ReLU(),
             nn.Linear(self.encoderHiddenDim,self.rDim)
         )
 
         self.encoderMLP1=nn.Sequential(
-            nn.Linear(7 * self.embedding_size + 1, self.encoderHiddenDim),
+            nn.Linear(self.taskUserEmbedding.getAllDim()+self.taskItemEmbedding.getAllDim()+1, self.encoderHiddenDim),
             nn.ReLU(),
             nn.Linear(self.encoderHiddenDim, self.rDim)
         )
 
-        self.zVectorGenerator=ZVectorGenerator(self.rDim,self.zDim)
-        self.taNPRec=TaNPRec(self.embedding_size*7+self.zDim,self.config['decodeHiddenDim'],self.rDim)
+        self.zVectorGenerator=ZVectorGenerator(self.device,self.rDim,self.zDim)
+        self.taNPRec=TaNPRec(self.taskUserEmbedding.getAllDim()+self.taskItemEmbedding.getAllDim()+self.zDim,self.config['decodeHiddenDim'],self.rDim)
 
-        self.aMatrix=AMatrix(self.rDim,self.config['k'],self.config['alpha'])
+        self.aMatrix=AMatrix(self.device,self.rDim,self.config['k'],self.config['alpha'])
 
         self.metaParams=deepcopy(self.state_dict())
 
@@ -121,7 +123,7 @@ class TaNP(MetaRecommender):
         return 0.5*torch.sum(kl)
 
     def calculate_loss(self, taskBatch):
-        totalLoss = torch.tensor(0.0)
+        totalLoss = torch.tensor(0.0).to(self.device)
         C_box=[]
         self.load_state_dict(deepcopy(self.metaParams))
         for task in taskBatch:
@@ -148,8 +150,8 @@ class TaNP(MetaRecommender):
             r_i=torch.sum(r_ij,dim=0)/r_ij.shape[0]
 
             qrt_z_i,qrt_mu_i,qrt_sigma_i=self.zVectorGenerator(r_i)
-            o_i_batch=o_i+torch.zeros(size=(qrt_x_user.shape[0],o_i.shape[0]))
-            qrt_z_i_batch=qrt_z_i+torch.zeros(size=(qrt_x_user.shape[0],qrt_z_i.shape[0]))
+            o_i_batch=o_i+torch.zeros(size=(qrt_x_user.shape[0],o_i.shape[0])).to(self.device)
+            qrt_z_i_batch=qrt_z_i+torch.zeros(size=(qrt_x_user.shape[0],qrt_z_i.shape[0])).to(self.device)
 
             qrt_input=torch.cat((qrt_x_user,qrt_x_item,qrt_z_i_batch),dim=1)
 
@@ -184,7 +186,7 @@ class TaNP(MetaRecommender):
         tempGrad=[]
         for index,value in enumerate(grad):
             if value is None:
-                tempGrad.append(torch.zeros(self.metaGradCollector.gradDict[self.metaGradCollector.paramNameList[index]].shape))
+                tempGrad.append(torch.zeros(self.metaGradCollector.gradDict[self.metaGradCollector.paramNameList[index]].shape).to(self.device))
             else:
                 tempGrad.append(value)
         tempGrad=tuple(tempGrad)
@@ -210,10 +212,10 @@ class TaNP(MetaRecommender):
 
         c_i, attentionVec = self.aMatrix(t_i)
         o_i = t_i + attentionVec
-        o_i_batch = o_i + torch.zeros(size=(qrt_x_user.shape[0], o_i.shape[0]))
+        o_i_batch = o_i + torch.zeros(size=(qrt_x_user.shape[0], o_i.shape[0])).to(self.device)
 
         spt_z_i, spt_mu_i, spt_sigma_i = self.zVectorGenerator(t_i)
-        sptForQrt_z_i_batch = spt_z_i + torch.zeros(size=(qrt_x_user.shape[0], spt_z_i.shape[0]))
+        sptForQrt_z_i_batch = spt_z_i + torch.zeros(size=(qrt_x_user.shape[0], spt_z_i.shape[0])).to(self.device)
 
         qrt_input = torch.cat((qrt_x_user, qrt_x_item, sptForQrt_z_i_batch), dim=1)
 

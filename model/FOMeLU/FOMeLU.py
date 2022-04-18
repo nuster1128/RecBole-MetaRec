@@ -37,15 +37,15 @@ class FOMeLU(MetaRecommender):
         self.MLPHiddenSize = config['mlp_hidden_size']
         self.localLr = config['melu_args']['local_lr']
 
-        self.model=nn.Sequential(
-            MLPLayers(self.MLPHiddenSize),
-            nn.Linear(self.MLPHiddenSize[-1],1)
-        )
-
         self.embeddingTable=EmbeddingTable(self.embedding_size,self.dataset)
+        self.model = nn.Sequential(
+            MLPLayers([self.embeddingTable.getAllDim()] + self.MLPHiddenSize),
+            nn.Linear(self.MLPHiddenSize[-1], 1)
+        )
         self.metaGradCollector=GradCollector(list(self.state_dict().keys()))
 
         self.keepWeightParams = deepcopy(self.model.state_dict())
+
 
     def taskDesolveEmb(self,task):
         spt_x=self.embeddingTable.embeddingAllFields(task.spt)
@@ -92,7 +92,7 @@ class FOMeLU(MetaRecommender):
         return qrt_y_predict
 
     def calculate_loss(self, taskBatch):
-        totalLoss=torch.tensor(0.0)
+        totalLoss=torch.tensor(0.0).to(self.config.final_config_dict['device'])
         for task in taskBatch:
             spt_x, spt_y, qrt_x, qrt_y=self.taskDesolveEmb(task)
 
@@ -120,7 +120,7 @@ class FOMeLU(MetaRecommender):
             self.embeddingTable.zero_grad()
             gradEmb = torch.autograd.grad(loss, self.embeddingTable.parameters(), create_graph=True, retain_graph=True)
 
-            self.metaGradCollector.addGrad(gradModel+gradEmb)
+            self.metaGradCollector.addGrad(gradEmb+gradModel)
             totalLoss+=loss.detach()
 
             self.model.load_state_dict(self.keepWeightParams)           # Params back

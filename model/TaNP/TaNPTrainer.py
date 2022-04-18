@@ -20,7 +20,8 @@ class TaNPTrainer(MetaTrainer):
 
     def __init__(self,config,model):
         super(TaNPTrainer, self).__init__(config,model)
-
+        
+        self.device=config.final_config_dict['device']
         self.userFields = model.dataset.fields(source=[FeatureSource.USER])
         self.itemFields = model.dataset.fields(source=[FeatureSource.ITEM])
         self.yField = model.RATING
@@ -50,7 +51,7 @@ class TaNPTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0)
+        totalLoss=torch.tensor(0.0).to(self.device)
         for batch_idx, taskBatch in enumerate(iter_data):
             taskBatch = [self.taskDesolve(task) for task in taskBatch]
             loss, grad = self.model.calculate_loss(taskBatch)

@@ -24,7 +24,7 @@ class ItemEmbedding(nn.Module):
         self.embeddingTable=EmbeddingTable(embeddingSize,dataset,source=[FeatureSource.ITEM])
 
         self.embeddingNetwork=nn.Sequential(
-            nn.Linear(embeddingSize*3,hiddenSize),
+            nn.Linear(self.embeddingTable.getAllDim(),hiddenSize),
             nn.ReLU(),
             nn.Linear(hiddenSize,embeddingSize)
         )
@@ -72,7 +72,7 @@ class LWA(MetaRecommender):
         return prediction_qrt_y
 
     def calculate_loss(self, taskBatch):
-        totalLoss = torch.tensor(0.0)
+        totalLoss = torch.tensor(0.0).to(self.config.final_config_dict['device'])
 
         for task in taskBatch:
             spt_x_item, spt_y,qrt_x_item,qrt_y =task

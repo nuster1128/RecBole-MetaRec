@@ -3,9 +3,16 @@ from recbole.config import Config
 from MetaUtils import *
 from model.FOMeLU.FOMeLUTrainer import FOMeLUTrainer
 from model.FOMeLU.FOMeLU import FOMeLU
+from model.MetaEmb.MetaEmb import MetaEmb
+from model.MetaEmb.MetaEmbTrainer import MetaEmbTrainer
+
+modelName='FOMeLU'
+datasetName='ml-100k'
+trainerName=modelName+'Trainer'
+configPath=['model/'+modelName+'/'+modelName+'.yaml']
 
 if __name__ == '__main__':
-    config = Config(model=FOMeLU, dataset='ml-100k-local', config_file_list=['model/FOMeLU/FOMeLU.yaml'])
+    config = Config(model=eval(modelName), dataset=datasetName, config_file_list=configPath)
     init_seed(config['seed'], config['reproducibility'])
 
     # logger initialization
@@ -22,11 +29,11 @@ if __name__ == '__main__':
     logger.info(train_data)
 
     # model loading and initialization
-    model = FOMeLU(config, train_data.dataset).to(config['device'])
+    model = eval(modelName)(config, train_data.dataset).to(config['device'])
     logger.info(model)
 
     # trainer loading and initialization
-    trainer = FOMeLUTrainer(config, model)
+    trainer = eval(trainerName)(config, model)
 
     # model training
     best_valid_score, best_valid_result = trainer.fit(train_data, valid_data)

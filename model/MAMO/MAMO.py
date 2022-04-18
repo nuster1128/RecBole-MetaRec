@@ -18,11 +18,12 @@ from MetaRecommender import MetaRecommender
 from MetaUtils import GradCollector,EmbeddingTable
 
 class MAMOMemory2D():
-    def __init__(self,k,dim,lr=None):
+    def __init__(self,device,k,dim,lr=None):
+        self.device=device
         self.lr=lr
         self.k=k
         self.dim=dim
-        self.matrix=torch.randn(size=(k,dim))
+        self.matrix=torch.randn(size=(k,dim)).to(device)
 
     def attention(self,vector):
         return F.softmax(torch.matmul(self.matrix,vector))
@@ -31,18 +32,19 @@ class MAMOMemory2D():
         return torch.matmul(weightVector,self.matrix)
 
     def update(self,weightVector,vector2):
-        weightVector=(weightVector+torch.zeros(size=(vector2.shape[0],weightVector.shape[0]))).T
-        vector2=vector2+torch.zeros(size=(weightVector.shape[0],vector2.shape[0]))
+        weightVector=(weightVector+torch.zeros(size=(vector2.shape[0],weightVector.shape[0])).to(self.device)).T
+        vector2=vector2+torch.zeros(size=(weightVector.shape[0],vector2.shape[0])).to(self.device)
         crossProduct=weightVector*vector2
         self.matrix=self.matrix*(1-self.lr)+crossProduct*self.lr
 
 class MAMOMemory3D():
-    def __init__(self,k,dim1,dim2,lr=None):
+    def __init__(self,device,k,dim1,dim2,lr=None):
+        self.device=device
         self.lr=lr
         self.k=k
         self.dim1=dim1
         self.dim2=dim2
-        self.matrix=torch.randn(size=(k,dim1,dim2))
+        self.matrix=torch.randn(size=(k,dim1,dim2)).to(device)
 
     def indice(self,weightVector):
         tmp=torch.reshape(self.matrix,(self.k,self.dim1*self.dim2))
@@ -51,8 +53,8 @@ class MAMOMemory3D():
 
     def update(self,weightVector,vector2):
         vector2=torch.reshape(vector2,(-1,))
-        weightVector = (weightVector + torch.zeros(size=(vector2.shape[0], weightVector.shape[0]))).T
-        vector2 = vector2 + torch.zeros(size=(weightVector.shape[0], vector2.shape[0]))
+        weightVector = (weightVector + torch.zeros(size=(vector2.shape[0], weightVector.shape[0])).to(self.device)).T
+        vector2 = vector2 + torch.zeros(size=(weightVector.shape[0], vector2.shape[0])).to(self.device)
         crossProduct = weightVector * vector2
         crossProduct=torch.reshape(crossProduct,self.matrix.shape)
         self.matrix = self.matrix * (1 - self.lr) + crossProduct * self.lr
@@ -63,9 +65,9 @@ class MAMOEmbeddingTable(nn.Module):
 
         self.embTable=EmbeddingTable(embeddingSize,dataset,source)
         self.network=nn.Sequential(
-            nn.Linear(fieldNum*embeddingSize,int(fieldNum*embeddingSize/2)),
+            nn.Linear(self.embTable.getAllDim(),int(self.embTable.getAllDim()/2)),
             nn.LeakyReLU(),
-            nn.Linear(int(fieldNum*embeddingSize/2),embeddingSize)
+            nn.Linear(int(self.embTable.getAllDim()/2),embeddingSize)
         )
 
     def forward(self,interaction):
@@ -89,7 +91,7 @@ class MAMORec(nn.Module):
         x=F.leaky_relu(self.hiddenLayer2(x))
         return self.outputLayer(x)
 
-def squeezeMeodelParams(model):
+def squeezeModelParams(model):
     paramList=[]
     for name,value in model.state_dict().items():
         paramList.append(torch.reshape(value,(-1,)))
@@ -114,6 +116,7 @@ class MAMO(MetaRecommender):
         super(MAMO, self).__init__(config,dataset)
 
         self.embedding_size=self.config['embedding']
+        self.device=self.config.final_config_dict['device']
 
         self.taskUserEmbedding = MAMOEmbeddingTable(self.embedding_size, dataset, source=[FeatureSource.USER], fieldNum=4)
         self.taskItemEmbedding = MAMOEmbeddingTable(self.embedding_size, dataset, source=[FeatureSource.ITEM], fieldNum=3)
@@ -123,11 +126,11 @@ class MAMO(MetaRecommender):
         self.metaItemEmbedding = deepcopy(self.taskItemEmbedding.state_dict())
         self.metaMamoRec = deepcopy(self.taskMamoRec.state_dict())
 
-        self.userEmbeddingParamNum=squeezeMeodelParams(self.taskUserEmbedding).shape[0]
+        self.userEmbeddingParamNum=squeezeModelParams(self.taskUserEmbedding).shape[0]
 
-        self.MP = MAMOMemory2D(self.config['k'],4*self.embedding_size,lr=self.config['alpha'])
-        self.MU = MAMOMemory2D(self.config['k'],self.userEmbeddingParamNum,lr=self.config['beta'])
-        self.MUI = MAMOMemory3D(self.config['k'],self.embedding_size,2*self.embedding_size,lr=self.config['gamma'])
+        self.MP = MAMOMemory2D(self.device,self.config['k'],self.taskUserEmbedding.embTable.getAllDim(),lr=self.config['alpha'])
+        self.MU = MAMOMemory2D(self.device,self.config['k'],self.userEmbeddingParamNum,lr=self.config['beta'])
+        self.MUI = MAMOMemory3D(self.device,self.config['k'],self.embedding_size,2*self.embedding_size,lr=self.config['gamma'])
 
         self.metaGradCollector = GradCollector(list(self.state_dict().keys()))
 
@@ -168,7 +171,7 @@ class MAMO(MetaRecommender):
 
         for index, name in enumerate(paramNames):
             fastweight[name] = tmp[name] - self.config['rho'] * grad[index]
-            if index <= 7:
+            if name[:len('taskUserEmbedding')] == 'taskUserEmbedding':
                 gradUserEmbedding.append(torch.reshape(grad[index], (-1,)))
 
         self.load_state_dict(fastweight)
@@ -181,7 +184,8 @@ class MAMO(MetaRecommender):
         return predict_qry_y, gradVecForMU,attention_u,spt_x_userProfile,MuI
 
     def calculate_loss(self, taskBatch):
-        totalLoss = torch.tensor(0.0)
+        
+        totalLoss = torch.tensor(0.0).to(self.device)
         for task in taskBatch:
             (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y = task
 

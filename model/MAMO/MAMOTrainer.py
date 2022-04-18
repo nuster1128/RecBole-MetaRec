@@ -39,6 +39,9 @@ class MAMOTrainer(MetaTrainer):
         return (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y
 
     def _train_epoch(self, train_data, epoch_idx, loss_func=None, show_progress=False):
+        self.model.metaUserEmbedding = deepcopy(self.model.taskUserEmbedding.state_dict())
+        self.model.metaItemEmbedding = deepcopy(self.model.taskItemEmbedding.state_dict())
+        self.model.metaMamoRec = deepcopy(self.model.taskMamoRec.state_dict())
         self.model.train()
         iter_data = (
             tqdm(
@@ -48,7 +51,7 @@ class MAMOTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss = torch.tensor(0.0)
+        totalLoss = torch.tensor(0.0).to(self.config.final_config_dict['device'])
         for batch_idx, taskBatch in enumerate(iter_data):
             taskBatch=[self.taskDesolve(task) for task in taskBatch]
             loss, grad = self.model.calculate_loss(taskBatch)

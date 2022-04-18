@@ -24,7 +24,7 @@ class ModelRec(nn.Module):
         self.userEmbedding=EmbeddingTable(embeddingSize,dataset,source=[FeatureSource.USER])
         self.itemEmbedding=EmbeddingTable(embeddingSize,dataset,source=[FeatureSource.ITEM])
 
-        self.hiddenLayer=nn.Linear(indexEmbDim+embeddingSize*7,hiddenDim)
+        self.hiddenLayer=nn.Linear(indexEmbDim+self.userEmbedding.getAllDim()+self.itemEmbedding.getAllDim(),hiddenDim)
         self.outputLayer=nn.Linear(hiddenDim,2)
 
     def forward(self,indexEmb,userFeatures,itemFeatures):
@@ -49,7 +49,7 @@ class EmbeddingGenerator(nn.Module):
         self.userEmbedding=deepcopy(userEmbedding)
 
         self.mlp=nn.Sequential(
-            nn.Linear(embeddingDim * 4, hiddenDim),
+            nn.Linear(self.userEmbedding.getAllDim(), hiddenDim),
             nn.ReLU(),
             nn.Linear(hiddenDim, indexEmbDim)
         )
@@ -65,7 +65,8 @@ class MetaEmb(MetaRecommender):
 
     def __init__(self,config,dataset):
         super(MetaEmb, self).__init__(config,dataset)
-
+        
+        self.device=self.config.final_config_dict['device']
         self.embedding_size=self.config['embedding']
         self.indexEmbDim=self.config['indexEmbDim']
         self.embeddingGeneratorHiddenDim=self.config['embeddingGeneratorHiddenDim']
@@ -108,7 +109,7 @@ class MetaEmb(MetaRecommender):
 
         grad = torch.autograd.grad(spt_loss, phi_init)
         avgGrad = torch.sum(grad[0], dim=0) / grad[0].shape[0]
-        phi_prime = (phi_init[0] - self.localLr * avgGrad) + torch.zeros(size=(qrt_x_userid.shape[0], avgGrad.shape[0]))
+        phi_prime = (phi_init[0] - self.localLr * avgGrad) + torch.zeros(size=(qrt_x_userid.shape[0], avgGrad.shape[0])).to(self.device)
 
         predict_qrt_y = self.pretrainModel.f(phi_prime, qrt_x_user, qrt_x_item)
 
@@ -116,7 +117,7 @@ class MetaEmb(MetaRecommender):
 
 
     def calculate_loss(self, taskBatch):
-        totalLoss = torch.tensor(0.0)
+        totalLoss = torch.tensor(0.0).to(self.device)
 
         for task in taskBatch:
             (spt_x_userid,spt_x_user, spt_x_item), spt_y,(qrt_x_userid,qrt_x_user, qrt_x_item), qrt_y =task
@@ -128,8 +129,8 @@ class MetaEmb(MetaRecommender):
             spt_loss=F.cross_entropy(predict_spt_y,spt_y)
 
             grad=torch.autograd.grad(spt_loss,phi_init,create_graph=True,retain_graph=True)
-            avgGrad=torch.sum(grad[0],dim=0)/grad[0].shape[0]
-            phi_prime=(phi_init[0]-self.localLr*avgGrad)+torch.zeros(size=(qrt_x_userid.shape[0],avgGrad.shape[0]))
+            avgGrad=torch.sum(grad[0].to(self.device),dim=0)/grad[0].shape[0]
+            phi_prime=(phi_init[0]-self.localLr*avgGrad)+torch.zeros(size=(qrt_x_userid.shape[0],avgGrad.shape[0])).to(self.device)
 
             predict_qrt_y=self.pretrainModel.f(phi_prime,qrt_x_user,qrt_x_item)
             qrt_y=qrt_y-1

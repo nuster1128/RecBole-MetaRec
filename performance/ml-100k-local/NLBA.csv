@@ -1,9 +1,0 @@
-ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
-NLBA,ml-100k-local-CTR,lr(0.0001);,0.4724,0.4724,1.0,0.4489,0.594
-NLBA,ml-100k-local-CTR,lr(0.001);,0.4724,0.4724,1.0,0.4506,0.5968
-NLBA,ml-100k-local-CTR,lr(0.005);,0.4828,0.4828,1.0,0.4581,0.6011
-NLBA,ml-100k-local-CTR,lr(0.01);,0.4724,0.4724,1.0,0.445,0.5796
-NLBA,ml-100k-local-CTR,lr(0.02);,0.4931,0.4931,1.0,0.4651,0.6011
-NLBA,ml-100k-local-CTR,lr(0.05);,0.5138,0.5138,1.0,0.4841,0.617
-NLBA,ml-100k-local-CTR,lr(0.1);,0.5103,0.5103,1.0,0.4802,0.6175
-NLBA,ml-100k-local-CTR,lr(0.2);,0.5,0.5,1.0,0.4698,0.606

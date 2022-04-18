@@ -53,7 +53,7 @@ class MetaEmbTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0)
+        totalLoss=torch.tensor(0.0).to(self.config.final_config_dict['device'])
         # PreTrain
         if epoch_idx == 0:
             for ep in range(self.config['pretrainEpoch']):

@@ -100,6 +100,9 @@ class MetaDataLoader(AbstractDataLoader):
         spt=self.dataset.join(spt)
         qrt=Interaction({self.dataset.uid_field:qrtUid,self.dataset.iid_field:torch.tensor(qrtIid),self.dataset.rating_field:torch.tensor(qrtRating)})
         qrt=self.dataset.join(qrt)
+        
+        spt=spt.to(self.config.final_config_dict['device'])
+        qrt=qrt.to(self.config.final_config_dict['device'])
         return Task(taskInfo,spt,qrt)
 
     def getTaskIdList(self):

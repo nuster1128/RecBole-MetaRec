@@ -48,7 +48,7 @@ class LWATrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0)
+        totalLoss=torch.tensor(0.0).to(self.config.final_config_dict['device'])
 
         # Train
         for batch_idx, taskBatch in enumerate(iter_data):

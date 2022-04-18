@@ -21,6 +21,7 @@ class MWUFTrainer(MetaTrainer):
     def __init__(self,config,model):
         super(MWUFTrainer, self).__init__(config,model)
 
+        self.device=self.config.final_config_dict['device']
         self.userFields = model.dataset.fields(source=[FeatureSource.USER])
         self.itemFields = model.dataset.fields(source=[FeatureSource.ITEM])
         self.yField = model.LABEL
@@ -56,7 +57,7 @@ class MWUFTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0)
+        totalLoss=torch.tensor(0.0).to(self.device)
         # PreTrain
         if epoch_idx == 0:
             for ep in range(self.config['pretrainEpoch']):
@@ -64,7 +65,7 @@ class MWUFTrainer(MetaTrainer):
                     taskBatch = [self.taskDesolve(task) for task in taskBatch]
                     self.model.pretrain(taskBatch)
             phi_old=list(self.model.pretrainModel.userIndexEmbedding.state_dict().values())[0]
-            phi_new=torch.sum(phi_old,dim=0)/phi_old.shape[0]+torch.zeros(size=phi_old.shape)
+            phi_new=torch.sum(phi_old,dim=0)/phi_old.shape[0]+torch.zeros(size=phi_old.shape).to(self.device)
 
             newUserIndexEmbeddingParam=OrderedDict()
             for name,value in self.model.pretrainModel.userIndexEmbedding.state_dict().items():

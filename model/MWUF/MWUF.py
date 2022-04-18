@@ -25,7 +25,7 @@ class ModelRec(nn.Module):
         self.itemEmbedding=EmbeddingTable(embeddingSize,dataset,source=[FeatureSource.ITEM])
         self.itemIndexEmbedding=nn.Embedding(dataset.num(config['ITEM_ID_FIELD']),indexEmbDim)
 
-        self.hiddenLayer=nn.Linear(indexEmbDim*2+embeddingSize*7,hiddenDim)
+        self.hiddenLayer=nn.Linear(indexEmbDim*2+self.userEmbedding.getAllDim()+self.itemEmbedding.getAllDim(),hiddenDim)
         self.outputLayer=nn.Linear(hiddenDim,2)
 
     def forward(self,userIndexEmb,userFeatures,itemIndex,itemFeatures):
@@ -47,16 +47,16 @@ class PreTrainModel(nn.Module):
         return self.f(self.userIndexEmbedding(x_userid),x_user,x_itemid,x_item)
 
 class MetaNets(nn.Module):
-    def __init__(self,config,embedding_size,indexEmbDim):
+    def __init__(self,config,embedding_size,indexEmbDim,userDim,itemDim):
         super(MetaNets, self).__init__()
 
         self.scaleNet = nn.Sequential(
-            nn.Linear(4 * embedding_size, config['scaleHiddenDim']),
+            nn.Linear(userDim, config['scaleHiddenDim']),
             nn.ReLU(),
             nn.Linear(config['scaleHiddenDim'], indexEmbDim)
         )
         self.shiftNet = nn.Sequential(
-            nn.Linear(3 * embedding_size, config['shiftHiddenDim']),
+            nn.Linear(itemDim, config['shiftHiddenDim']),
             nn.ReLU(),
             nn.Linear(config['shiftHiddenDim'], indexEmbDim)
         )
@@ -68,13 +68,14 @@ class MWUF(MetaRecommender):
     def __init__(self,config,dataset):
         super(MWUF, self).__init__(config,dataset)
 
+        self.device=self.config.final_config_dict['device']
         self.embedding_size = self.config['embedding']
         self.indexEmbDim = self.config['indexEmbDim']
 
         self.pretrainModel = PreTrainModel(config, dataset)
         self.pretrainOpt = torch.optim.SGD(self.pretrainModel.parameters(), lr=self.config['pretrainLr'])
 
-        self.metaNets=MetaNets(config,self.embedding_size,self.indexEmbDim)
+        self.metaNets=MetaNets(config,self.embedding_size,self.indexEmbDim,self.pretrainModel.f.userEmbedding.getAllDim(),self.pretrainModel.f.itemEmbedding.getAllDim())
 
         self.userEmbeddingGradCollector=GradCollector(list(self.pretrainModel.userIndexEmbedding.state_dict().keys()))
         self.metaNetsGradCollector=GradCollector(list(self.metaNets.state_dict().keys()))
@@ -97,7 +98,7 @@ class MWUF(MetaRecommender):
             self.pretrainOpt.step()
 
     def calculate_loss(self, taskBatch):
-        totalLoss = torch.tensor(0.0)
+        totalLoss = torch.tensor(0.0).to(self.device)
 
         for task in taskBatch:
             (spt_x_userid,spt_x_user,spt_x_itemid, spt_x_item), spt_y,(qrt_x_userid,qrt_x_user,qrt_x_itemid, qrt_x_item), qrt_y =task
@@ -110,7 +111,7 @@ class MWUF(MetaRecommender):
 
             spt_scale=self.metaNets.scaleNet(self.pretrainModel.f.userEmbedding.embeddingAllFields(spt_x_user))
             allItemVectors=torch.cat([self.pretrainModel.f.itemEmbedding.embeddingAllFields(spt_x_item),self.pretrainModel.f.itemEmbedding.embeddingAllFields(qrt_x_item)])
-            avgItemVectors=torch.sum(allItemVectors,dim=0)/allItemVectors.shape[0]+torch.zeros(size=allItemVectors.shape)
+            avgItemVectors=torch.sum(allItemVectors,dim=0)/allItemVectors.shape[0]+torch.zeros(size=allItemVectors.shape).to(self.device)
             spt_shift=self.metaNets.shiftNet(avgItemVectors[:-10])
 
             spt_userIndexWarm=spt_userIndexCold*spt_scale+spt_shift
@@ -149,7 +150,7 @@ class MWUF(MetaRecommender):
 
         qrt_scale = self.metaNets.scaleNet(self.pretrainModel.f.userEmbedding.embeddingAllFields(qrt_x_user))
         allItemVectors = torch.cat([self.pretrainModel.f.itemEmbedding.embeddingAllFields(spt_x_item),self.pretrainModel.f.itemEmbedding.embeddingAllFields(qrt_x_item)])
-        avgItemVectors = torch.sum(allItemVectors, dim=0) / allItemVectors.shape[0] + torch.zeros(size=allItemVectors.shape)
+        avgItemVectors = torch.sum(allItemVectors, dim=0) / allItemVectors.shape[0] + torch.zeros(size=allItemVectors.shape).to(self.device)
         qrt_shift = self.metaNets.shiftNet(avgItemVectors[-10:])
 
         qrt_userIndexWarm = qrt_userIndexCold * qrt_scale + qrt_shift

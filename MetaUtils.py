@@ -9,6 +9,8 @@ recbole.MetaModule.MetaUtils
 
 from collections import OrderedDict
 import os,pickle
+
+import torch
 import torch.nn as nn
 from recbole.data.dataloader import *
 from recbole.utils.argument_list import dataset_arguments
@@ -183,6 +185,9 @@ class EmbeddingTable(nn.Module):
             if self.fieldType(field) is FeatureType.TOKEN:
                 self.embeddingDict[field]=nn.Embedding(self.dataset.num(field),self.embeddingSize)
                 self.add_module(field,self.embeddingDict[field])
+            if self.fieldType(field) is FeatureType.TOKEN_SEQ:
+                self.embeddingDict[field] = nn.Embedding(self.dataset.num(field), self.embeddingSize)
+                self.add_module(field, self.embeddingDict[field])
 
     def fieldType(self,field):
         '''
@@ -191,6 +196,15 @@ class EmbeddingTable(nn.Module):
         :return type(str): Field type.
         '''
         return self.dataset.field2type[field]
+
+    def getAllDim(self):
+        dim=0
+        for field in self.embeddingFields:
+            if self.fieldType(field) is FeatureType.TOKEN or self.fieldType(field) is FeatureType.TOKEN_SEQ:
+                dim+=self.embeddingSize
+            if self.fieldType(field) is FeatureType.FLOAT:
+                dim+=1
+        return dim
 
     def embeddingSingleField(self,field,batchX):
         '''
@@ -203,7 +217,9 @@ class EmbeddingTable(nn.Module):
         '''
         if self.fieldType(field) is FeatureType.TOKEN:
             return self.embeddingDict[field](batchX)
-        else:
+        if self.fieldType(field) is FeatureType.TOKEN_SEQ:
+            return torch.sum(self.embeddingDict[field](batchX),dim=1)
+        if self.fieldType(field) is FeatureType.FLOAT:
             return torch.reshape(batchX,shape=(batchX.shape[0],1))
 
     def embeddingAllFields(self,interaction):
