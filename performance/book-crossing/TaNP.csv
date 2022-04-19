@@ -1,0 +1,9 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+TaNP,book-crossing,lr(0.0001);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.001);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.005);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.01);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.02);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.05);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.1);,0.6413,0.6413,1.0,0.6621,0.8343
+TaNP,book-crossing,lr(0.2);,0.6413,0.6413,1.0,0.6621,0.8343

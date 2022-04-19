@@ -3,8 +3,6 @@ from recbole.config import Config
 from MetaUtils import *
 from model.FOMeLU.FOMeLUTrainer import FOMeLUTrainer
 from model.FOMeLU.FOMeLU import FOMeLU
-from model.MetaEmb.MetaEmb import MetaEmb
-from model.MetaEmb.MetaEmbTrainer import MetaEmbTrainer
 
 modelName='FOMeLU'
 datasetName='ml-100k'
