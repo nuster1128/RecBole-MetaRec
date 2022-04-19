@@ -56,7 +56,7 @@ We list the models that we have implemented up to now:
 
 - [MeLU](model/FOMeLU/FOMeLU.py) from Hoyeop Lee *et al.*: [MeLU: Meta-Learned User Preference Estimator for Cold-Start Recommendation](https://dl.acm.org/doi/abs/10.1145/3292500.3330859) (SIGKDD 2019). **Note: We implement both MeLU with FOMAML and Full MAML, but we conduct the evaluation with MeLU in FOMAML method.**
 - [MAMO](model/MAMO/MAMO.py) from Manqing Dong *et al.*: [MAMO: Memory-Augmented Meta-Optimization for Cold-start Recommendation](https://dl.acm.org/doi/abs/10.1145/3394486.3403113) (SIGKDD 2020).
-- [TaNP](model/TaNP/TaNP.py) from Xixun Lin *et al.*: Task-adaptive Neural Process for User Cold-Start Recommendation(https://dl.acm.org/doi/abs/10.1145/3442381.3449908) (WWW 2021).
+- [TaNP](model/TaNP/TaNP.py) from Xixun Lin *et al.*: [Task-adaptive Neural Process for User Cold-Start Recommendation](https://dl.acm.org/doi/abs/10.1145/3442381.3449908) (WWW 2021).
 - [LWA](model/LWA/LWA.py) from Manasi Vartak *et al.*: [A Meta-Learning Perspective on Cold-Start Recommendations for Items](https://proceedings.neurips.cc/paper/2017/hash/51e6d6e679953c6311757004d8cbbba9-Abstract.html) (NIPS 2017).
 - [NLBA](model/NLBA/NLBA/py) from Manasi Vartak *et al.*: [A Meta-Learning Perspective on Cold-Start Recommendations for Items](https://proceedings.neurips.cc/paper/2017/hash/51e6d6e679953c6311757004d8cbbba9-Abstract.html) (NIPS 2017).
 - [MetaEmb](model/MetaEmb/MetaEmb.py) from Feiyang Pan *et al.*: [Warm Up Cold-start Advertisements: Improving CTR Predictions via Learning to Learn ID Embeddings](https://dl.acm.org/doi/abs/10.1145/3331184.3331268) (SIGIR 2019).

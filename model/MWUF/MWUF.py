@@ -62,6 +62,15 @@ class MetaNets(nn.Module):
         )
 
 class MWUF(MetaRecommender):
+    '''
+    This is the recommender implement of MWUF.
+
+    Zhu Y, Xie R, Zhuang F, et al. Learning to warm up cold item embeddings for cold-start recommendation with meta scaling and shifting networks[C]
+    Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval. 2021: 1167-1176.
+
+    https://doi.org/10.1145/3404835.3462843
+
+    '''
 
     input_type = InputType.POINTWISE
 

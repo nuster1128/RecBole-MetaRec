@@ -1,7 +1,7 @@
 import csv
 
 datasetName='book-crossing'
-threshold=4
+threshold=6
 
 def scoreToClick(scoreStr):
     score=int(scoreStr)

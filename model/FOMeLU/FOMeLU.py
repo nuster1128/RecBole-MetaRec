@@ -26,7 +26,7 @@ class FOMeLU(MetaRecommender):
 
     https://doi.org/10.1145/3292500.3330859
 
-    Note: Temporarily, we use FOMAML instead of full MAML and will correct soon.
+    Note: FOMeLU use FOMAML instead of Full MAML in the meta training process.
 
     '''
     input_type = InputType.POINTWISE

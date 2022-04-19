@@ -109,7 +109,15 @@ def unsqueezeModelParams(params,model):
     return state_dict
 
 class MAMO(MetaRecommender):
+    '''
+    This is the recommender implement of MAMO.
 
+    Dong M, Yuan F, Yao L, et al. Mamo: Memory-augmented meta-optimization for cold-start recommendation[C]
+    Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020: 688-697.
+
+    https://doi.org/10.1145/3394486.3403113
+
+    '''
     input_type = InputType.POINTWISE
 
     def __init__(self,config,dataset):

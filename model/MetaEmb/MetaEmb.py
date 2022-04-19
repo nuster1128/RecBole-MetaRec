@@ -60,6 +60,15 @@ class EmbeddingGenerator(nn.Module):
         return indexEmb
 
 class MetaEmb(MetaRecommender):
+    '''
+    This is the recommender implement of MetaEmb.
+
+    Pan F, Li S, Ao X, et al. Warm up cold-start advertisements: Improving ctr predictions via learning to learn id embeddings[C]
+    Proceedings of the 42nd International ACM SIGIR Conference on Research and Development in Information Retrieval. 2019: 695-704.
+
+    https://doi.org/10.1145/3331184.3331268
+
+    '''
 
     input_type = InputType.POINTWISE
 

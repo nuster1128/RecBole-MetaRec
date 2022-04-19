@@ -45,6 +45,15 @@ class LWARec(nn.Module):
         return F.sigmoid(torch.matmul(itemEmbed,weight)+self.b)
 
 class LWA(MetaRecommender):
+    '''
+    This is the recommender implement of LWA.
+
+    Vartak M, Thiagarajan A, Miranda C, et al. A meta-learning perspective on cold-start recommendations for items[J].
+    Advances in neural information processing systems, 2017, 30.
+
+    https://proceedings.neurips.cc/paper/2017/hash/51e6d6e679953c6311757004d8cbbba9-Abstract.html
+
+    '''
 
     input_type = InputType.POINTWISE
 

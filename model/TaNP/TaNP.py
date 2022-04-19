@@ -82,6 +82,15 @@ class TaNPRec(nn.Module):
         return output
 
 class TaNP(MetaRecommender):
+    '''
+    This is the recommender implement of TaNP.
+
+    Lin X, Wu J, Zhou C, et al. Task-adaptive neural process for user cold-start recommendation[C]
+    Proceedings of the Web Conference 2021. 2021: 1306-1316.
+
+    https://doi.org/10.1145/3442381.3449908
+
+    '''
 
     input_type = InputType.POINTWISE
 
