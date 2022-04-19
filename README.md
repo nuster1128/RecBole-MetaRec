@@ -1,5 +1,7 @@
 ## RecBole-MetaRec
 
+![logo](asset/pics/logo.png)
+
 **RecBole-MetaRec** is an extended module for [RecBole](https://recbole.io), which aims to help researches to compare and develop their own models in meta learning recommendation field.
 
 This module is totally developed based on RecBole by adding extened classes and functions, without modifying any codes of RecBole core. In addition, we built up extented modules with [Pytorch](https://pytorch.org). 
