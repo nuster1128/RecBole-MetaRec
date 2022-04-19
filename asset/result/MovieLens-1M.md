@@ -111,22 +111,23 @@ In addition, we constrain the embedding size with `64`.
   	<td>MetaEmb</td>
     <td rowspan="2">Learn to embedding</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.5214</td>
+    <td>0.5214</td>
+    <td>1.0000</td>
+    <td>0.5243</td>
+    <td>0.7203</td>
   </tr>
   <tr>
   	<td>MWUF</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.5208</td>
+    <td>0.5208</td>
+    <td>0.9968</td>
+    <td>0.5246</td>
+    <td>0.7227</td>
   </tr>
 </table>
+
 
 ## Hyper Parameter Tuning
 
@@ -137,5 +138,5 @@ In addition, we constrain the embedding size with `64`.
 | **TaNP**    | lr=0.001             | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **LWA**     | lr=0.02              | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **NLBA**    | lr=0.001             | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
-| **MetaEmb** |                      | local_lr:[0.0001,0.001,0.01], lr:[0.0001,0.001,0.01]     |
-| **MWUF**    |                      | local_lr:[0.0001,0.001,0.01], lr:[0.0001,0.001,0.01]     |
+| **MetaEmb** | All Same Performance | local_lr:[0.0001,0.001,0.01], lr:[0.0001,0.001,0.01]     |
+| **MWUF**    | All Same Performance | local_lr:[0.0001,0.001,0.01], lr:[0.0001,0.001,0.01]     |
