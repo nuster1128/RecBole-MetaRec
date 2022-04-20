@@ -72,9 +72,9 @@ We tune hyper-parameters of all the models that we have implemented and obtain t
 - Evaluation on [MovieLens-1M](asset/result/MovieLens-1M.md) dataset
 - Evaluation on [BookCrossing](asset/result/Book-Crossing.md) dataset
 
-### The Team
+### Team
 
-
+RecBole-MetaRec is developed by the member from RDS-Lab of GSAI, RUC. The main developer is Zeyu Zhang ([@nuster1128](https://github.com/nuster1128)).
 
 ### Acknowledgegment
 
