@@ -32,10 +32,9 @@ class MAMOMemory2D():
         return torch.matmul(weightVector,self.matrix)
 
     def update(self,weightVector,vector2):
-        weightVector=(weightVector+torch.zeros(size=(vector2.shape[0],weightVector.shape[0])).to(self.device)).T
-        vector2=vector2+torch.zeros(size=(weightVector.shape[0],vector2.shape[0])).to(self.device)
-        crossProduct=weightVector*vector2
-        self.matrix=self.matrix*(1-self.lr)+crossProduct*self.lr
+        crossProduct=torch.outer(weightVector,vector2)
+        self.matrix *= (1 - self.lr)
+        self.matrix+= crossProduct * self.lr
 
 class MAMOMemory3D():
     def __init__(self,device,k,dim1,dim2,lr=None):
@@ -52,12 +51,10 @@ class MAMOMemory3D():
         return output
 
     def update(self,weightVector,vector2):
-        vector2=torch.reshape(vector2,(-1,))
-        weightVector = (weightVector + torch.zeros(size=(vector2.shape[0], weightVector.shape[0])).to(self.device)).T
-        vector2 = vector2 + torch.zeros(size=(weightVector.shape[0], vector2.shape[0])).to(self.device)
-        crossProduct = weightVector * vector2
+        crossProduct=torch.outer(weightVector,torch.reshape(vector2,(-1,)))
         crossProduct=torch.reshape(crossProduct,self.matrix.shape)
-        self.matrix = self.matrix * (1 - self.lr) + crossProduct * self.lr
+        self.matrix *= (1 - self.lr)
+        self.matrix+= crossProduct * self.lr
 
 class MAMOEmbeddingTable(nn.Module):
     def __init__(self,embeddingSize, dataset,source,fieldNum):
@@ -109,15 +106,7 @@ def unsqueezeModelParams(params,model):
     return state_dict
 
 class MAMO(MetaRecommender):
-    '''
-    This is the recommender implement of MAMO.
 
-    Dong M, Yuan F, Yao L, et al. Mamo: Memory-augmented meta-optimization for cold-start recommendation[C]
-    Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020: 688-697.
-
-    https://doi.org/10.1145/3394486.3403113
-
-    '''
     input_type = InputType.POINTWISE
 
     def __init__(self,config,dataset):
@@ -130,9 +119,9 @@ class MAMO(MetaRecommender):
         self.taskItemEmbedding = MAMOEmbeddingTable(self.embedding_size, dataset, source=[FeatureSource.ITEM], fieldNum=3)
         self.taskMamoRec = MAMORec(self.embedding_size * 2)
 
-        self.metaUserEmbedding = deepcopy(self.taskUserEmbedding.state_dict())
-        self.metaItemEmbedding = deepcopy(self.taskItemEmbedding.state_dict())
-        self.metaMamoRec = deepcopy(self.taskMamoRec.state_dict())
+        self.metaUserEmbedding = self.taskUserEmbedding.state_dict()
+        self.metaItemEmbedding = self.taskItemEmbedding.state_dict()
+        self.metaMamoRec = self.taskMamoRec.state_dict()
 
         self.userEmbeddingParamNum=squeezeModelParams(self.taskUserEmbedding).shape[0]
 
@@ -145,7 +134,7 @@ class MAMO(MetaRecommender):
     def forward(self,spt_x_user,spt_x_item, qrt_x_user, qrt_x_item,spt_y):
         spt_y= spt_y.view(-1, 1)
 
-        self.taskUserEmbedding.load_state_dict(deepcopy(self.metaUserEmbedding))
+        self.taskUserEmbedding.load_state_dict(self.metaUserEmbedding)
         spt_x_userProfile = self.taskUserEmbedding.getProfile(spt_x_user)[0]
 
         attention_u = self.MP.attention(spt_x_userProfile)
@@ -157,8 +146,8 @@ class MAMO(MetaRecommender):
             userEmbeddingFastWeight[name] = value - self.config['tau'] * b_u[name]
 
         self.taskUserEmbedding.load_state_dict(userEmbeddingFastWeight)
-        self.taskItemEmbedding.load_state_dict(deepcopy(self.metaItemEmbedding))
-        self.taskMamoRec.load_state_dict(deepcopy(self.metaMamoRec))
+        self.taskItemEmbedding.load_state_dict(self.metaItemEmbedding)
+        self.taskMamoRec.load_state_dict(self.metaMamoRec)
 
         MuI = self.MUI.indice(attention_u)
         mamoRecHiddenLayerStateDict = OrderedDict()
@@ -196,7 +185,7 @@ class MAMO(MetaRecommender):
         totalLoss = torch.tensor(0.0).to(self.device)
         for task in taskBatch:
             (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y = task
-
+            
             predict_qry_y, gradVecForMU,attention_u,spt_x_userProfile,MuI=self.forward(spt_x_user,spt_x_item, qrt_x_user, qrt_x_item,spt_y)
 
             qrt_y=qrt_y.view(-1, 1)
@@ -210,7 +199,7 @@ class MAMO(MetaRecommender):
 
             self.metaGradCollector.addGrad(grad)
             totalLoss+=qrtLoss.detach()
-
+        
         self.metaGradCollector.averageGrad(self.config['train_batch_size'])
         totalLoss /= self.config['train_batch_size']
         return totalLoss, self.metaGradCollector.dumpGrad()

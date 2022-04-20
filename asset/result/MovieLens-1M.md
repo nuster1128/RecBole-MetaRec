@@ -46,6 +46,8 @@ topk: 5
 
 In addition, we constrain the embedding size with `64`.
 
+\* Because MAMO has a huge demand for GPU memory, we set the ` epochs` with `6` for fairness. Acoording to the training loss and validation results, it has been converged in all probability.
+
 ## Evaluation Results
 
 <table>
@@ -73,11 +75,11 @@ In addition, we constrain the embedding size with `64`.
   <tr>
   	<td>MAMO</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.5923</td>
+    <td>0.5923</td>
+    <td>0.9968</td>
+    <td>0.6079</td>
+    <td>0.8073</td>
   </tr>
   <tr>
   	<td>TaNP</td>
@@ -129,12 +131,13 @@ In addition, we constrain the embedding size with `64`.
 </table>
 
 
+
 ## Hyper Parameter Tuning
 
 | Model       | Best Hyper Parameter | Tuning Range                                             |
 | ----------- | -------------------- | -------------------------------------------------------- |
 | **FOMeLU**  | All Same Performance | local_lr:[0.000005,0.0005,0.005],lr:[0.00005,0.005,0.05] |
-| **MAMO**    |                      | alpha:[0.1,0.2,0.5], beta:[0.05,0.1,0.2]                 |
+| **MAMO**    | All Same Performance | alpha:[0.1,0.2,0.5], beta:[0.05,0.1,0.2]                 |
 | **TaNP**    | lr=0.001             | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **LWA**     | lr=0.02              | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **NLBA**    | lr=0.001             | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |

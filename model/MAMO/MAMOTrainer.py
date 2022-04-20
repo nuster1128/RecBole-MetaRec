@@ -20,6 +20,7 @@ class MAMOTrainer(MetaTrainer):
     def __init__(self,config,model):
         super(MAMOTrainer, self).__init__(config,model)
 
+        self.device=self.config.final_config_dict['device']
         self.userFields = model.dataset.fields(source=[FeatureSource.USER])
         self.itemFields=model.dataset.fields(source=[FeatureSource.ITEM])
         self.yField = model.RATING
@@ -39,9 +40,11 @@ class MAMOTrainer(MetaTrainer):
         return (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y
 
     def _train_epoch(self, train_data, epoch_idx, loss_func=None, show_progress=False):
-        self.model.metaUserEmbedding = deepcopy(self.model.taskUserEmbedding.state_dict())
-        self.model.metaItemEmbedding = deepcopy(self.model.taskItemEmbedding.state_dict())
-        self.model.metaMamoRec = deepcopy(self.model.taskMamoRec.state_dict())
+        # show_progress=True
+        if epoch_idx == 0:
+            self.model.metaUserEmbedding = self.model.taskUserEmbedding.state_dict()
+            self.model.metaItemEmbedding = self.model.taskItemEmbedding.state_dict()
+            self.model.metaMamoRec = self.model.taskMamoRec.state_dict()
         self.model.train()
         iter_data = (
             tqdm(
@@ -51,7 +54,7 @@ class MAMOTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss = torch.tensor(0.0).to(self.config.final_config_dict['device'])
+        totalLoss = torch.tensor(0.0).to(self.device)
         for batch_idx, taskBatch in enumerate(iter_data):
             taskBatch=[self.taskDesolve(task) for task in taskBatch]
             loss, grad = self.model.calculate_loss(taskBatch)
@@ -66,9 +69,9 @@ class MAMOTrainer(MetaTrainer):
 
             self.model.load_state_dict(newParams)
 
-            self.model.metaUserEmbedding = deepcopy(self.model.taskUserEmbedding.state_dict())
-            self.model.metaItemEmbedding = deepcopy(self.model.taskItemEmbedding.state_dict())
-            self.model.metaMamoRec = deepcopy(self.model.taskMamoRec.state_dict())
+            self.model.metaUserEmbedding = self.model.taskUserEmbedding.state_dict()
+            self.model.metaItemEmbedding = self.model.taskItemEmbedding.state_dict()
+            self.model.metaMamoRec = self.model.taskMamoRec.state_dict()
 
             if self.gpu_available and show_progress:
                 iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))

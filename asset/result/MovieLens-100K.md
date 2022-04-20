@@ -73,11 +73,11 @@ In addition, we constrain the embedding size with `64`.
   <tr>
   	<td>MAMO</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.6103</td>
+    <td>0.6103</td>
+    <td>1.0000</td>
+    <td>0.5929</td>
+    <td>0.7144</td>
   </tr>
   <tr>
   	<td>TaNP</td>
@@ -133,7 +133,7 @@ In addition, we constrain the embedding size with `64`.
 | Model       | Best Hyper Parameter | Tuning Range                                             |
 | ----------- | -------------------- | -------------------------------------------------------- |
 | **FOMeLU**  | All Same Performance | local_lr:[0.000005,0.0005,0.005],lr:[0.00005,0.005,0.05] |
-| **MAMO**    |                      | alpha:[0.1,0.2,0.5], beta:[0.05,0.1,0.2]                 |
+| **MAMO**    | All Same Performance | alpha:[0.1,0.2,0.5], beta:[0.05,0.1,0.2]                 |
 | **TaNP**    | lr=0.005             | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **LWA**     | All Same Performance | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
 | **NLBA**    | All Same Performance | lr:[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]           |
