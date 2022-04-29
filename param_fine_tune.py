@@ -58,31 +58,100 @@ typeDict={
     'MetaEmb':'click',
     'MWUF':'click',
 }
+## ml-100k
+kFOMeLUTuneDict=OrderedDict({
+        'embedding_size': [16],
+        'train_batch_size': [256],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+kTaNPTuneDict=OrderedDict({
+        'embedding': [256],
+        'train_batch_size': [128],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]        
+    })
+kLWATuneDict=OrderedDict({
+        'embedding': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+kNLBATuneDict=OrderedDict({
+        'embedding': [16],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+kMetaEmbTuneDict=OrderedDict({
+        'embedding': [128],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+kMWUFTuneDict=OrderedDict({
+        'embedding': [256],
+        'train_batch_size': [8],
+        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
 
-FOMeLUTuneDict=OrderedDict({
-        'local_lr':[0.000005,0.0005,0.005],
-        'lr':[0.00005,0.005,0.05]
+## ml-1m
+mFOMeLUTuneDict=OrderedDict({
+        'embedding_size': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-MAMOTuneDict=OrderedDict({
-        'alpha':[0.1,0.2,0.5],
-        'beta':[0.05,0.1,0.2]
+mTaNPTuneDict=OrderedDict({
+        'embedding': [16],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-TaNPTuneDict=OrderedDict({
-        'lr':[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]
+mLWATuneDict=OrderedDict({
+        'embedding': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-LWATuneDict=OrderedDict({
-        'lr':[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]
+mNLBATuneDict=OrderedDict({
+        'embedding': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-NLBATuneDict=OrderedDict({
-        'lr':[0.0001,0.001,0.005,0.01,0.02,0.05,0.1,0.2]
+mMetaEmbTuneDict=OrderedDict({
+        'embedding': [256],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-MetaEmbTuneDict=OrderedDict({
-        'local_lr':[0.0001,0.001,0.01],
-        'lr':[0.0001,0.001,0.01]
+mMWUFTuneDict=OrderedDict({
+        'embedding': [256],
+        'train_batch_size': [64],
+        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
-MWUFTuneDict=OrderedDict({
-        'local_lr':[0.0001,0.001,0.01],
-        'lr':[0.0001,0.001,0.01]
+
+## bookcrossing
+gFOMeLUTuneDict=OrderedDict({
+        'embedding_size': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+gTaNPTuneDict=OrderedDict({
+        'embedding': [8],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+gLWATuneDict=OrderedDict({
+        'embedding': [64],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+gNLBATuneDict=OrderedDict({
+        'embedding': [16],
+        'train_batch_size': [128],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+gMetaEmbTuneDict=OrderedDict({
+        'embedding': [32],
+        'train_batch_size': [8],
+        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+    })
+gMWUFTuneDict=OrderedDict({
+        'embedding': [16],
+        'train_batch_size': [8],
+        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
     })
 
 rankingMetrics=['precision','recall','hit','ndcg','mrr']
@@ -103,10 +172,8 @@ def getDetail(parameter_dict):
 
 def finetuneSingleModel(modelName,datasetName,tuneDict,logger=False):
     oriDTN=datasetName
-    valueMetrics = ['mae']
     if typeDict[modelName] == 'click':
         datasetName=datasetName+'-CTR'
-        valueMetrics = ['auc']
 
     values=list(tuneDict.values())
     keys=list(tuneDict.keys())
@@ -114,26 +181,19 @@ def finetuneSingleModel(modelName,datasetName,tuneDict,logger=False):
     paramList=[]
     dfs(paramList,[],values)
 
-    board=[['ModelName','Dataset','Detail']+valueMetrics+rankingMetrics]
-    # board = [['ModelName', 'Dataset', 'Detail']+ rankingMetrics]
+    board = [['ModelName', 'Dataset', 'Detail']+ rankingMetrics]
 
     print(modelName,'start with',len(paramList),'groups.')
     for index,param in enumerate(paramList):
         parameter_dict=dict(zip(keys,param))
         detail=getDetail(parameter_dict)
 
-        parameter_dict['epochs']=50
+        parameter_dict['epochs']=10
         parameter_dict['metrics']=rankingMetrics
         parameter_dict['valid_metric']='mrr@5'
         rankingResult=runSingleModel(modelName,datasetName,parameter_dict,logger)
 
-        parameter_dict['metrics']=valueMetrics
-        parameter_dict['valid_metric'] = 'mae'
-        valueResult=runSingleModel(modelName,datasetName,parameter_dict,logger)
-        valueResult.update(rankingResult)
-
-        board.append([modelName]+[datasetName]+[detail]+[v for k,v in valueResult.items()])
-        # board.append([modelName] + [datasetName] + [detail] + [v for k, v in rankingResult.items()])
+        board.append([modelName] + [datasetName] + [detail] + [v for k, v in rankingResult.items()])
         print('Finish group',index)
 
     path='performance/'+oriDTN+'/'+modelName+'.csv'
@@ -144,12 +204,17 @@ def finetuneSingleModel(modelName,datasetName,tuneDict,logger=False):
 
 def fintuneAllModels(modelList,datasetName,logger=False):
     for modelName in modelList:
-        tuneDict = eval(modelName + 'TuneDict')
+        tuneDict = eval(datasetName[-1]+modelName + 'TuneDict')
         finetuneSingleModel(modelName, datasetName, tuneDict,logger)
 
 if __name__ == '__main__':
     # modelList = ['FOMeLU','MAMO','TaNP','LWA','NLBA','MetaEmb','MWUF']
-    modelList = ['MWUF']
+    modelList = ['FOMeLU','TaNP','LWA','NLBA','MetaEmb','MWUF']
+    datasetName='ml-100k'
+    fintuneAllModels(modelList,datasetName,logger=False)
+    modelList = ['FOMeLU','TaNP','LWA','NLBA','MetaEmb','MWUF']
+    datasetName='ml-1m'
+    fintuneAllModels(modelList,datasetName,logger=False)
+    modelList = ['FOMeLU','TaNP','LWA','NLBA','MetaEmb','MWUF']
     datasetName='book-crossing'
-    fintuneAllModels(modelList,datasetName,logger=True)
-
+    fintuneAllModels(modelList,datasetName,logger=False)

@@ -31,6 +31,7 @@ class FOMeLUTrainer(MetaTrainer):
     def __init__(self,config,model):
         super(FOMeLUTrainer, self).__init__(config,model)
 
+        self.device=self.config.final_config_dict['device']
         self.lr = config['melu_args']['lr']
         self.xFields = model.dataset.fields(source=[FeatureSource.USER, FeatureSource.ITEM])
         self.yField = model.RATING
@@ -56,7 +57,7 @@ class FOMeLUTrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0).to(self.config.final_config_dict['device'])
+        totalLoss=torch.tensor(0.0).to(self.device)
         for batch_idx, taskBatch in enumerate(iter_data):
             loss, grad = self.model.calculate_loss(taskBatch)
             totalLoss+=loss
@@ -68,7 +69,7 @@ class FOMeLUTrainer(MetaTrainer):
 
             self.model.load_state_dict(newParams)
 
-            self.model.keepWeightParams = deepcopy(self.model.model.state_dict())
+            self.model.keepWeightParams = self.model.model.state_dict()
 
             if self.gpu_available and show_progress:
                 iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))

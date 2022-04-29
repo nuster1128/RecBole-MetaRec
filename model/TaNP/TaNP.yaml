@@ -7,7 +7,7 @@ load_col:
     inter: [user_id, item_id, rating]
     item: [item_id,movie_title,release_year,class]
     user: [user_id,age,gender,occupation,zip_code]
-user_inter_num_interval: [13,100]
+user_inter_num_interval: [13,110]
 
 # Training and evaluation config
 epochs: 50   # 30

@@ -57,13 +57,13 @@ class TaNPTrainer(MetaTrainer):
             loss, grad = self.model.calculate_loss(taskBatch)
             totalLoss+=loss
 
-            self.model.load_state_dict(deepcopy(self.model.metaParams))
+            self.model.load_state_dict(self.model.metaParams)
 
             newParams = OrderedDict()
             for name, params in self.model.state_dict().items():
                 newParams[name] = (params - self.config['lr'] * grad[name]).detach()
 
-            self.model.metaParams=deepcopy(newParams)
+            self.model.metaParams=newParams
 
             if self.gpu_available and show_progress:
                 iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))

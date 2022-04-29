@@ -21,6 +21,7 @@ class NLBATrainer(MetaTrainer):
     def __init__(self,config,model):
         super(NLBATrainer, self).__init__(config,model)
 
+        self.device=self.config.final_config_dict['device']
         self.itemFields = model.dataset.fields(source=[FeatureSource.ITEM])
         self.yField = model.LABEL
         self.userIdField=self.config['USER_ID_FIELD']
@@ -48,7 +49,7 @@ class NLBATrainer(MetaTrainer):
                 desc=set_color(f"Train {epoch_idx:>5}", 'pink'),
             ) if show_progress else train_data
         )
-        totalLoss=torch.tensor(0.0).to(self.config.final_config_dict['device'])
+        totalLoss=torch.tensor(0.0).to(self.device)
 
         # Train
         for batch_idx, taskBatch in enumerate(iter_data):
