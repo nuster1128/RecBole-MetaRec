@@ -65,69 +65,70 @@ topk: 5
   	<td>MeLU</td>
     <td rowspan="2">Learn to predict</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.6444</td>
+    <td>0.6444</td>
+    <td>1.0000</td>
+    <td>0.6710</td>
+    <td>0.8506</td>
   </tr>
   <tr>
   	<td>MAMO</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.6413</td>
+    <td>0.6413</td>
+    <td>1.0000</td>
+    <td>0.6621</td>
+    <td>0.8343</td>
   </tr>
   <tr>
   	<td>TaNP</td>
     <td rowspan="3">Learn to parameterize</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.6413</td>
+    <td>0.6413</td>
+    <td>1.0000</td>
+    <td>0.6621</td>
+    <td>0.8343</td>
   </tr>
   <tr>
   	<td>LWA</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4945</td>
+    <td>0.5602</td>
+    <td>0.9114</td>
+    <td>0.5543</td>
+    <td>0.6490</td>
   </tr>
   <tr>
   	<td>NLBA</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4945</td>
+    <td>0.5602</td>
+    <td>0.9114</td>
+    <td>0.5543</td>
+    <td>0.6490</td>
   </tr>
   <tr>
   	<td>MetaEmb</td>
     <td rowspan="2">Learn to embedding</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4927</td>
+    <td>0.5597</td>
+    <td>0.9127</td>
+    <td>0.5538</td>
+    <td>0.6499</td>
   </tr>
   <tr>
   	<td>MWUF</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4927</td>
+    <td>0.5597</td>
+    <td>0.9127</td>
+    <td>0.5538</td>
+    <td>0.6499</td>
   </tr>
 </table>
+
 
 ## Hyper Parameter Tuning
 
@@ -141,77 +142,63 @@ topk: 5
     <td><b>FOMeLU</b></td>
     <td>embedding_size: [8];<br>
       train_batch_size: [8];<br>
-      lr: [0.01];<br>
-      mlp_hidden_size: [[64,64]]</td>
+      lr: [0.01]
     <td>embedding_size: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      mlp_hidden_size: [[8,8],[16,16],[32,32],[64,64],[128,128],[256,256]]</td>
+      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
   	<td><b>MAMO</b></td>
     <td>embedding: [8];<br>
       train_batch_size: [8];<br>
-      lambda (lr): [0.01];<br>
-      beta: [0.05]</td>
+      lambda (lr): [0.01]</td>
     <td>embedding: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lambda (lr): [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      beta: [0.05,0.1,0.2,0.5,0.8,1.0]</td>
+      lambda (lr): [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
     <td><b>TaNP</b></td>
     <td>embedding: [8];<br>
       train_batch_size: [8];<br>
-      lr: [0.01];<br>
-      lambda: [1.0]</td>
+      lr: [0.01]</td>
     <td>embedding: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      lambda: [0.05,0.1,0.2,0.5,0.8,1.0]</td>
+      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
     <td><b>LWA</b></td>
     <td>embedding_size: [64];<br>
       train_batch_size: [8];<br>
-      lr: [0.01];<br>
-      embeddingHiddenDim: [16]</td>
+      lr: [0.01]</td>
     <td>embedding_size: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      embeddingHiddenDim: [8,16,32,64,128,256]</td>
+      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
     <td><b>NLBA</b></td>
     <td>embedding_size: [16];<br>
       train_batch_size: [128];<br>
-      lr: [0.01];<br>
-      recHiddenDim: [8]</td>
+      lr: [0.01]</td>
     <td>embedding_size: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      recHiddenDim: [8,16,32,64,128,256]</td>
+      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
     <td><b>MetaEmb</b></td>
     <td>embedding_size: [32];<br>
       train_batch_size: [8];<br>
-      lr: [0.01];<br>
-      alpha: [0.5]</td>
+      lr: [0.01]</td>
     <td>embedding_size: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      alpha: [0.05,0.1,0.2,0.5,0.8,1.0]</td>
+      lr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
   <tr>
     <td><b>MWUF</b></td>
     <td>embedding_size: [16];<br>
       train_batch_size: [8];<br>
-      warmLossLr: [0.01];<br>
-      indexEmbDim: [8]</td>
+      warmLossLr: [0.01]</td>
     <td>embedding_size: [8,16,32,64,128,256];<br>
       train_batch_size: [8,16,32,64,128,256];<br>
-      warmLossLr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0];<br>
-      indexEmbDim: [8,16,32,64,128,256]</td>
+      warmLossLr: [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]</td>
   </tr>
 </table>

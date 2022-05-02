@@ -64,69 +64,70 @@ topk: 5
   	<td>MeLU</td>
     <td rowspan="2">Learn to predict</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.5061</td>
+    <td>0.5061</td>
+    <td>1.0000</td>
+    <td>0.5044</td>
+    <td>0.7016</td>
   </tr>
   <tr>
   	<td>MAMO</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.5923</td>
+    <td>0.5923</td>
+    <td>0.9968</td>
+    <td>0.6079</td>
+    <td>0.8073</td>
   </tr>
   <tr>
   	<td>TaNP</td>
     <td rowspan="3">Learn to parameterize</td>
     <td>Rating</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.6036</td>
+    <td>0.6036</td>
+    <td>0.9970</td>
+    <td>0.6145</td>
+    <td>0.7993</td>
   </tr>
   <tr>
   	<td>LWA</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4026</td>
+    <td>0.5455</td>
+    <td>0.9010</td>
+    <td>0.4881</td>
+    <td>0.5816</td>
   </tr>
   <tr>
   	<td>NLBA</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4026</td>
+    <td>0.5454</td>
+    <td>0.9010</td>
+    <td>0.4880</td>
+    <td>0.5816</td>
   </tr>
   <tr>
   	<td>MetaEmb</td>
     <td rowspan="2">Learn to embedding</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4153</td>
+    <td>0.5781</td>
+    <td>0.9297</td>
+    <td>0.5409</td>
+    <td>0.6668</td>
   </tr>
   <tr>
   	<td>MWUF</td>
     <td>Click</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>0.4211</td>
+    <td>0.5742</td>
+    <td>0.9073</td>
+    <td>0.5331</td>
+    <td>0.6384</td>
   </tr>
 </table>
+
 
 ## Hyper Parameter Tuning
 

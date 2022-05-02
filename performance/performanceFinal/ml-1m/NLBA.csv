@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+NLBA,ml-1m-CTR,embedding(8);train_batch_size(8);lr(0.01);recHiddenDim(8);,0.4026,0.5454,0.901,0.488,0.5816

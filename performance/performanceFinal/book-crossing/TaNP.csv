@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+TaNP,book-crossing,embedding(8);train_batch_size(8);lr(0.01);,0.6413,0.6413,1.0,0.6621,0.8343

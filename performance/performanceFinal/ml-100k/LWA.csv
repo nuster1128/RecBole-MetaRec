@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+LWA,ml-100k-CTR,embedding(8);train_batch_size(8);lr(0.01);embeddingHiddenDim(256);,0.5655,0.4767,0.9138,0.5736,0.6713

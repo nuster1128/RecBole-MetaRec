@@ -1,7 +1,0 @@
-ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
-FOMeLU,book-crossing,embedding_size(8);,0.6444,0.6444,1.0,0.671,0.8506
-FOMeLU,book-crossing,embedding_size(16);,0.4968,0.4968,0.9961,0.4939,0.6924
-FOMeLU,book-crossing,embedding_size(32);,0.5032,0.5032,0.9923,0.502,0.6988
-FOMeLU,book-crossing,embedding_size(64);,0.5076,0.5076,1.0,0.5087,0.7136
-FOMeLU,book-crossing,embedding_size(128);,0.5168,0.5168,0.9987,0.5172,0.7195
-FOMeLU,book-crossing,embedding_size(256);,0.516,0.516,0.9961,0.5179,0.7179
