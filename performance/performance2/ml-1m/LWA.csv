@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+LWA,ml-1m-CTR,embedding(8);train_batch_size(8);,0.4026,0.5454,0.901,0.488,0.5816
+LWA,ml-1m-CTR,embedding(8);train_batch_size(16);,0.4026,0.5454,0.901,0.488,0.5816
+LWA,ml-1m-CTR,embedding(8);train_batch_size(32);,0.4026,0.5454,0.901,0.488,0.5816
+LWA,ml-1m-CTR,embedding(8);train_batch_size(64);,0.4026,0.5454,0.901,0.488,0.5816
+LWA,ml-1m-CTR,embedding(8);train_batch_size(128);,0.4026,0.5454,0.901,0.488,0.5816
+LWA,ml-1m-CTR,embedding(8);train_batch_size(256);,0.4026,0.5454,0.901,0.488,0.5816

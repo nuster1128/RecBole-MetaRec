@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+LWA,book-crossing-CTR,embedding(8);,0.4935,0.5579,0.9089,0.552,0.6465
+LWA,book-crossing-CTR,embedding(16);,0.4932,0.5587,0.9114,0.5509,0.6451
+LWA,book-crossing-CTR,embedding(32);,0.494,0.5597,0.9114,0.5532,0.6482
+LWA,book-crossing-CTR,embedding(64);,0.4945,0.5602,0.9114,0.5543,0.649
+LWA,book-crossing-CTR,embedding(128);,0.4945,0.5602,0.9114,0.5543,0.649
+LWA,book-crossing-CTR,embedding(256);,0.4945,0.5602,0.9114,0.5543,0.649

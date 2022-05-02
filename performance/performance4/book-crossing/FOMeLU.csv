@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([8, 8]);",0.5045,0.5045,0.9961,0.5046,0.7061
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([16, 16]);",0.5119,0.5119,0.9974,0.511,0.7056
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([32, 32]);",0.6406,0.6406,1.0,0.6636,0.8393
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([64, 64]);",0.6444,0.6444,1.0,0.671,0.8506
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([128, 128]);",0.6444,0.6444,1.0,0.671,0.8506
+FOMeLU,book-crossing,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([256, 256]);",0.6444,0.6444,1.0,0.671,0.8506

@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+FOMeLU,ml-1m,embedding_size(8);,0.5061,0.5061,1.0,0.5025,0.6942
+FOMeLU,ml-1m,embedding_size(16);,0.4933,0.4933,1.0,0.4918,0.692
+FOMeLU,ml-1m,embedding_size(32);,0.4965,0.4965,1.0,0.4925,0.6954
+FOMeLU,ml-1m,embedding_size(64);,0.4978,0.4978,0.9968,0.5025,0.7116
+FOMeLU,ml-1m,embedding_size(128);,0.4952,0.4952,0.9968,0.4978,0.7121
+FOMeLU,ml-1m,embedding_size(256);,0.4907,0.4907,1.0,0.4908,0.7009

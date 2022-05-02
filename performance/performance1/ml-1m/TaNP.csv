@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+TaNP,ml-1m,embedding(8);,0.506,0.506,0.997,0.5102,0.7237
+TaNP,ml-1m,embedding(16);,0.5096,0.5096,1.0,0.5106,0.7145
+TaNP,ml-1m,embedding(32);,0.4988,0.4988,0.994,0.5052,0.7234
+TaNP,ml-1m,embedding(64);,0.494,0.494,0.994,0.4875,0.6816
+TaNP,ml-1m,embedding(128);,0.4988,0.4988,0.994,0.5013,0.7081
+TaNP,ml-1m,embedding(256);,0.5036,0.5036,0.997,0.5106,0.7204

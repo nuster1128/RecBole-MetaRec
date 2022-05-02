@@ -33,6 +33,9 @@ class MetaCollector(Collector):
         if self.register.need('rec.topk'):
             _, eval_topk_idx = torch.topk(eval_pred, max(self.topk), dim=-1)
             _, label_topk_idx = torch.topk(data_label, max(self.topk), dim=-1)
+            if self.config['LABEL_FIELD'] == 'label':
+                data_label=data_label-min(data_label)
+                _, label_topk_idx = torch.topk(data_label, torch.sum(data_label), dim=-1)
 
             pos_matrix = torch.zeros_like(eval_pred, dtype=torch.int)
             pos_matrix[label_topk_idx] = 1

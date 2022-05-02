@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MetaEmb,ml-1m-CTR,embedding(8);,0.3578,0.4779,0.8818,0.4329,0.5491
+MetaEmb,ml-1m-CTR,embedding(16);,0.3706,0.5102,0.8978,0.4577,0.5656
+MetaEmb,ml-1m-CTR,embedding(32);,0.3923,0.5235,0.8978,0.4872,0.6033
+MetaEmb,ml-1m-CTR,embedding(64);,0.3859,0.5259,0.9201,0.4799,0.6073
+MetaEmb,ml-1m-CTR,embedding(128);,0.3968,0.5458,0.9201,0.501,0.6229
+MetaEmb,ml-1m-CTR,embedding(256);,0.4153,0.5728,0.9297,0.5374,0.6623

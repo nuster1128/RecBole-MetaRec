@@ -62,96 +62,114 @@ typeDict={
 kFOMeLUTuneDict=OrderedDict({
         'embedding_size': [16],
         'train_batch_size': [256],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'mlp_hidden_size': [[8,8],[16,16],[32,32],[64,64],[128,128],[256,256]]
     })
 kTaNPTuneDict=OrderedDict({
         'embedding': [256],
         'train_batch_size': [128],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]        
+        'lr': [0.01],
+        'lambda': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 kLWATuneDict=OrderedDict({
         'embedding': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'embeddingHiddenDim': [8,16,32,64,128,256]
     })
 kNLBATuneDict=OrderedDict({
         'embedding': [16],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'recHiddenDim': [8,16,32,64,128,256]
     })
 kMetaEmbTuneDict=OrderedDict({
         'embedding': [128],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'alpha': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 kMWUFTuneDict=OrderedDict({
         'embedding': [256],
         'train_batch_size': [8],
-        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'warmLossLr': [0.1],
+        'indexEmbDim': [8,16,32,64,128,256]
     })
 
 ## ml-1m
 mFOMeLUTuneDict=OrderedDict({
         'embedding_size': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'mlp_hidden_size': [[8,8],[16,16],[32,32],[64,64],[128,128],[256,256]]
     })
 mTaNPTuneDict=OrderedDict({
         'embedding': [16],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'lambda': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 mLWATuneDict=OrderedDict({
         'embedding': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.2],
+        'embeddingHiddenDim': [8,16,32,64,128,256]
     })
 mNLBATuneDict=OrderedDict({
         'embedding': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'recHiddenDim': [8,16,32,64,128,256]
     })
 mMetaEmbTuneDict=OrderedDict({
         'embedding': [256],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.5],
+        'alpha': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 mMWUFTuneDict=OrderedDict({
         'embedding': [256],
         'train_batch_size': [64],
-        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'warmLossLr': [0.05],
+        'indexEmbDim': [8,16,32,64,128,256]
     })
 
 ## bookcrossing
 gFOMeLUTuneDict=OrderedDict({
         'embedding_size': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'mlp_hidden_size': [[8,8],[16,16],[32,32],[64,64],[128,128],[256,256]]
     })
 gTaNPTuneDict=OrderedDict({
         'embedding': [8],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'lambda': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 gLWATuneDict=OrderedDict({
         'embedding': [64],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'embeddingHiddenDim': [8,16,32,64,128,256]
     })
 gNLBATuneDict=OrderedDict({
         'embedding': [16],
         'train_batch_size': [128],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'recHiddenDim': [8,16,32,64,128,256]
     })
 gMetaEmbTuneDict=OrderedDict({
         'embedding': [32],
         'train_batch_size': [8],
-        'lr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'lr': [0.01],
+        'alpha': [0.05,0.1,0.2,0.5,0.8,1.0]
     })
 gMWUFTuneDict=OrderedDict({
         'embedding': [16],
         'train_batch_size': [8],
-        'warmLossLr': [0.0001,0.001,0.01,0.05,0.1,0.2,0.5,1.0]
+        'warmLossLr': [0.01],
+        'indexEmbDim': [8,16,32,64,128,256]
     })
 
 rankingMetrics=['precision','recall','hit','ndcg','mrr']

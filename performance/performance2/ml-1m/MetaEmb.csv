@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(8);,0.4153,0.5728,0.9297,0.5374,0.6623
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(16);,0.4153,0.5728,0.9297,0.5374,0.6623
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(32);,0.4153,0.5728,0.9297,0.5374,0.6623
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(64);,0.4153,0.5728,0.9297,0.5374,0.6623
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(128);,0.4153,0.5728,0.9297,0.5374,0.6623
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(256);,0.4153,0.5728,0.9297,0.5374,0.6623

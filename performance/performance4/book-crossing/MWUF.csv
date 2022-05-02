@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(8);,0.7194,0.7194,1.0,0.7461,0.895
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(16);,0.7194,0.7194,1.0,0.7461,0.895
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(32);,0.5027,0.5027,0.9923,0.5032,0.7109
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(64);,0.7194,0.7194,1.0,0.7461,0.895
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(128);,0.497,0.497,0.9961,0.4935,0.6895
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);indexEmbDim(256);,0.4955,0.4955,0.9961,0.4954,0.7022

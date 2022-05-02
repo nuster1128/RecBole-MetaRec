@@ -1,0 +1,7 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MWUF,ml-100k-CTR,embedding(8);,0.5931,0.5281,0.9655,0.6205,0.7152
+MWUF,ml-100k-CTR,embedding(16);,0.569,0.4659,0.931,0.567,0.677
+MWUF,ml-100k-CTR,embedding(32);,0.6276,0.528,0.9483,0.6587,0.779
+MWUF,ml-100k-CTR,embedding(64);,0.6241,0.5295,0.9655,0.6613,0.777
+MWUF,ml-100k-CTR,embedding(128);,0.6379,0.5361,0.9483,0.6813,0.8103
+MWUF,ml-100k-CTR,embedding(256);,0.6655,0.5817,0.9655,0.7239,0.8477
