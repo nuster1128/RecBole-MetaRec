@@ -22,7 +22,7 @@ load_col:
 user_inter_num_interval: [13,100]
 
 # Training and evaluation config
-epochs: 50
+epochs: 10
 train_batch_size: 32
 valid_metric: mrr@5
 
