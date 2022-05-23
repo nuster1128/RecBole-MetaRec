@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+FOMeLU,ml-1m,"embedding_size(8);train_batch_size(8);lr(0.01);mlp_hidden_size([64, 64]);",0.5061,0.5061,1.0,0.5044,0.7016

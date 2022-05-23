@@ -1,7 +1,0 @@
-ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(8);,0.3981,0.5384,0.8882,0.5055,0.6316
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(16);,0.3981,0.5384,0.8882,0.5055,0.6316
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(32);,0.3981,0.5384,0.8882,0.5055,0.6316
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(64);,0.3981,0.5395,0.8882,0.5058,0.6316
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(128);,0.3981,0.5395,0.8882,0.5058,0.6316
-MWUF,ml-1m-CTR,embedding(256);train_batch_size(256);,0.3981,0.5395,0.8882,0.5058,0.6316

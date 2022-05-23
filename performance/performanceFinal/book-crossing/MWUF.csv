@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MWUF,book-crossing-CTR,embedding(16);train_batch_size(8);warmLossLr(0.01);,0.4927,0.5597,0.9127,0.5538,0.6499

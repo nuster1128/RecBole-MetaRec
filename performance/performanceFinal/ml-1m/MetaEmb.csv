@@ -1,0 +1,2 @@
+ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
+MetaEmb,ml-1m-CTR,embedding(256);train_batch_size(8);lr(0.5);alpha(0.5);,0.4153,0.5781,0.9297,0.5409,0.6668
