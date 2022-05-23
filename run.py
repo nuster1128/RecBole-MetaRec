@@ -1,3 +1,5 @@
+import importlib
+
 from recbole.utils import init_logger, init_seed
 from recbole.config import Config
 from MetaUtils import *
