@@ -1,0 +1,43 @@
+# Dataset config
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+LABEL_FIELD: label
+RATING_FIELD: label
+load_col:
+    inter: [user_id, item_id, label]
+    item: [item_id,movie_title,release_year,class]
+    user: [user_id,age,gender,occupation,zip_code]
+user_inter_num_interval: [13,100]
+
+# Training and evaluation config
+epochs: 50   # 30
+train_batch_size: 32
+valid_metric: 'AUC'
+
+# Evaluate config
+eval_args:
+    group_by: task
+    order: RO
+    split: {'RS': [0.8,0.1,0.1]}
+    mode : labeled
+
+# Meta learning config
+meta_args:
+    support_num: none
+    query_num: 10
+
+# MWUF Parameters
+embedding: 32
+indexEmbDim: 8
+modelRecHiddenDim: 32
+pretrainEpoch: 20
+pretrainLr: 0.0001
+scaleHiddenDim: 32
+shiftHiddenDim: 32
+coldLossLr: 0.0001
+warmLossLr: 0.0001
+
+# Metrics
+metrics: ['AUC']
+metric_decimal_place: 4
+topk: 5

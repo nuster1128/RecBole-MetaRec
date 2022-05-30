@@ -1,0 +1,39 @@
+# Dataset config
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+RATING_FIELD: rating
+LABEL_FIELD: rating
+load_col:
+    inter: [user_id, item_id, rating]
+    item: [item_id,movie_title,release_year,class]
+    user: [user_id,age,gender,occupation,zip_code]
+user_inter_num_interval: [13,100]
+
+# Training and evaluation config
+epochs: 2   # 30
+train_batch_size: 32
+valid_metric: 'NDCG@5'
+
+# Evaluate config
+eval_args:
+    group_by: task
+    order: RO
+    split: {'RS': [0.8,0.1,0.1]}
+    mode : labeled
+
+# Meta learning config
+meta_args:
+    support_num: none
+    query_num: 10
+
+# MeLU Parameters
+embedding_size: 32  # For 7 fields in the dataset.
+mlp_hidden_size: [224,4,4]
+melu_args:
+    local_lr: 0.000005  # 5e-6
+    lr: 0.00005 #5e-5
+
+# Metrics
+metrics: ['NDCG']
+metric_decimal_place: 4
+topk: 5
