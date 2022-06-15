@@ -2,9 +2,9 @@
 
 ![logo](asset/pics/logo.png)
 
-**RecBole-MetaRec** is an extended module for [RecBole](https://recbole.io), which aims to help researches to compare and develop their own models in meta learning recommendation field.
+**RecBole-MetaRec** is an extended module for [RecBole](https://recbole.io), which aims to help researchers to compare and develop their own models in the meta learning recommendation field.
 
-This module is totally developed based on RecBole by adding extened classes and functions, without modifying any codes of RecBole core. In addition, we built up extented modules with [Pytorch](https://pytorch.org). 
+This module is totally developed based on RecBole by adding extended classes and functions, without modifying any codes of RecBole cores. In addition, we built up extended modules with [Pytorch](https://pytorch.org). 
 
 This module can mainly provide researchers the following advantages:
 
@@ -44,7 +44,7 @@ tqdm>=4.62.3
 
 ### Quick-Start
 
-After the package installation process, you can run the demo code with:
+After the package installation process, you can run the quickstart code with:
 
 ```
 python quickstart.py
@@ -66,11 +66,11 @@ We list the models that we have implemented up to now:
 
 ### Results
 
-We tune hyper-parameters of all the models that we have implemented and obtain the performance board respectively.
+We tune hyper-parameters of all the models that we have implemented and obtain the best hyper-parameters respectively.
 
-- Evaluation on [MovieLens-100K](asset/result/MovieLens-100K.md) dataset
-- Evaluation on [MovieLens-1M](asset/result/MovieLens-1M.md) dataset
-- Evaluation on [BookCrossing](asset/result/Book-Crossing.md) dataset
+- Results on [MovieLens-100K](asset/result/MovieLens-100K.md) dataset
+- Results on [MovieLens-1M](asset/result/MovieLens-1M.md) dataset
+- Results on [BookCrossing](asset/result/Book-Crossing.md) dataset
 
 ### Developer
 
