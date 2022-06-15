@@ -1,6 +1,8 @@
-## RecBole-MetaRec
-
 ![logo](asset/pics/logo.png)
+
+------
+
+## RecBole-MetaRec
 
 **RecBole-MetaRec** is an extended module for [RecBole](https://recbole.io), which aims to help researchers to compare and develop their own models in the meta learning recommendation field.
 
@@ -18,7 +20,13 @@ Moreover, we provide a document in detail for researchers.
 
 **Note:** Before starting, it is strongly recommended to realize how RecBole works.
 
-<img src="asset/pics/graph.png" alt="graph" style="zoom:50%;" />
+```
+<p align="center">
+<img src="asset/pics/graph.png" alt="graph" width="600" />
+<br>
+  <b>图片</b>: RecBole-MetaRec 总体架构
+</p>
+```
 
 ### Contributions
 

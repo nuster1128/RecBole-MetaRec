@@ -1,0 +1,209 @@
+Wed 15 Jun 2022 21:13:03 INFO  
+General Hyper Parameters:
+gpu_id = 0
+use_gpu = True
+seed = 2020
+state = INFO
+reproducibility = True
+data_path = D:\Softwares\Miniconda3\envs\recbole\Lib\site-packages\recbole\config\../dataset_example/ml-100k
+checkpoint_dir = saved
+show_progress = True
+save_dataset = False
+dataset_save_path = None
+save_dataloaders = False
+dataloaders_save_path = None
+log_wandb = False
+
+Training Hyper Parameters:
+epochs = 50
+train_batch_size = 32
+learner = adam
+learning_rate = 0.001
+neg_sampling = {'uniform': 1}
+eval_step = 1
+stopping_step = 10
+clip_grad_norm = None
+weight_decay = 0.0
+loss_decimal_place = 4
+
+Evaluation Hyper Parameters:
+eval_args = {'group_by': 'task', 'order': 'RO', 'split': {'RS': [0.8, 0.1, 0.1]}, 'mode': 'labeled'}
+repeatable = False
+metrics = ['precision', 'recall', 'hit', 'ndcg', 'mrr']
+topk = [5]
+valid_metric = mrr@5
+valid_metric_bigger = True
+eval_batch_size = 4096
+metric_decimal_place = 4
+
+Dataset Hyper Parameters:
+field_separator = 	
+seq_separator =  
+USER_ID_FIELD = user_id
+ITEM_ID_FIELD = item_id
+RATING_FIELD = rating
+TIME_FIELD = timestamp
+seq_len = None
+LABEL_FIELD = rating
+threshold = None
+NEG_PREFIX = neg_
+load_col = {'inter': ['user_id', 'item_id', 'rating'], 'item': ['item_id', 'movie_title', 'release_year', 'class'], 'user': ['user_id', 'age', 'gender', 'occupation', 'zip_code']}
+unload_col = None
+unused_col = None
+additional_feat_suffix = None
+rm_dup_inter = None
+val_interval = None
+filter_inter_by_user_or_item = True
+user_inter_num_interval = [13, 110]
+item_inter_num_interval = None
+alias_of_user_id = None
+alias_of_item_id = None
+alias_of_entity_id = None
+alias_of_relation_id = None
+preload_weight = None
+normalize_field = None
+normalize_all = None
+ITEM_LIST_LENGTH_FIELD = item_length
+LIST_SUFFIX = _list
+MAX_ITEM_LIST_LENGTH = 50
+POSITION_FIELD = position_id
+HEAD_ENTITY_ID_FIELD = head_id
+TAIL_ENTITY_ID_FIELD = tail_id
+RELATION_ID_FIELD = relation_id
+ENTITY_ID_FIELD = entity_id
+benchmark_filename = None
+
+Other Hyper Parameters: 
+wandb_project = recbole
+require_pow = False
+MODEL_TYPE = <function Module.type at 0x00000257DA1B8B80>
+meta_args = {'support_num': 'none', 'query_num': 10}
+embedding = 32
+encoderHiddenDim = 32
+rDim = 32
+rHiddenDim = 32
+zDim = 32
+decodeHiddenDim = 32
+k = 10
+alpha = 1.0
+lambda = 1.0
+lr = 0.0001
+MODEL_INPUT_TYPE = InputType.POINTWISE
+eval_type = EvaluatorType.RANKING
+device = cpu
+train_neg_sample_args = {'strategy': 'by', 'by': 1, 'distribution': 'uniform', 'dynamic': 'none'}
+eval_neg_sample_args = {'strategy': 'none', 'distribution': 'none'}
+
+
+Wed 15 Jun 2022 21:13:04 INFO  ml-100k
+The number of users: 622
+Average actions of users: 48.14331723027375
+The number of items: 1683
+Average actions of items: 22.478947368421053
+The number of inters: 29897
+The sparsity of the dataset: 97.14403348789578%
+Remain Fields: ['user_id', 'item_id', 'rating', 'age', 'gender', 'occupation', 'zip_code', 'movie_title', 'release_year', 'class']
+Wed 15 Jun 2022 21:13:04 INFO  [Training]: train_batch_size = [32] negative sampling: [{'uniform': 1}]
+Wed 15 Jun 2022 21:13:04 INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'group_by': 'task', 'order': 'RO', 'split': {'RS': [0.8, 0.1, 0.1]}, 'mode': 'labeled'}]
+Wed 15 Jun 2022 21:13:04 INFO  <recbole_metarec.MetaDataLoader.MetaDataLoader object at 0x00000257FCC02E20>
+Wed 15 Jun 2022 21:13:04 INFO  TaNP(
+  (taskUserEmbedding): EmbeddingTable(
+    (age): Embedding(62, 32)
+    (gender): Embedding(3, 32)
+    (occupation): Embedding(22, 32)
+    (zip_code): Embedding(551, 32)
+  )
+  (taskItemEmbedding): EmbeddingTable(
+    (movie_title): Embedding(2653, 32)
+    (release_year): Embedding(74, 32)
+    (class): Embedding(20, 32)
+  )
+  (encoderMLP2): Sequential(
+    (0): Linear(in_features=225, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  )
+  (encoderMLP1): Sequential(
+    (0): Linear(in_features=225, out_features=32, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  )
+  (zVectorGenerator): ZVectorGenerator(
+    (W_s): Linear(in_features=32, out_features=32, bias=False)
+    (W_u): Linear(in_features=32, out_features=32, bias=False)
+    (W_sigma): Linear(in_features=32, out_features=32, bias=False)
+  )
+  (taNPRec): TaNPRec(
+    (hiddenLinear): Linear(in_features=256, out_features=32, bias=True)
+    (hiddenLambda): Linear(in_features=32, out_features=32, bias=False)
+    (hiddenBeta): Linear(in_features=32, out_features=32, bias=False)
+    (outputLinear): Linear(in_features=32, out_features=1, bias=True)
+    (outputLambda): Linear(in_features=32, out_features=1, bias=False)
+    (outputBeta): Linear(in_features=32, out_features=1, bias=False)
+  )
+  (aMatrix): AMatrix()
+)
+Trainable parameters: 138657
+Wed 15 Jun 2022 21:13:06 INFO  epoch 0 training [time: 1.91s, train loss: 5.8302]
+Wed 15 Jun 2022 21:13:06 INFO  epoch 0 evaluating [time: 0.06s, valid_score: 0.665900]
+Wed 15 Jun 2022 21:13:06 INFO  valid result: 
+precision@5 : 0.5194    recall@5 : 0.5194    hit@5 : 1.0    ndcg@5 : 0.5023    mrr@5 : 0.6659
+Wed 15 Jun 2022 21:13:06 INFO  Saving current: saved\TaNP-Jun-15-2022_21-13-04.pth
+Wed 15 Jun 2022 21:13:08 INFO  epoch 1 training [time: 2.22s, train loss: 1.9084]
+Wed 15 Jun 2022 21:13:08 INFO  epoch 1 evaluating [time: 0.09s, valid_score: 0.687400]
+Wed 15 Jun 2022 21:13:08 INFO  valid result: 
+precision@5 : 0.5226    recall@5 : 0.5226    hit@5 : 1.0    ndcg@5 : 0.5109    mrr@5 : 0.6874
+Wed 15 Jun 2022 21:13:08 INFO  Saving current: saved\TaNP-Jun-15-2022_21-13-04.pth
+Wed 15 Jun 2022 21:13:11 INFO  epoch 2 training [time: 2.81s, train loss: 1.8073]
+Wed 15 Jun 2022 21:13:11 INFO  epoch 2 evaluating [time: 0.07s, valid_score: 0.698100]
+Wed 15 Jun 2022 21:13:11 INFO  valid result: 
+precision@5 : 0.5323    recall@5 : 0.5323    hit@5 : 1.0    ndcg@5 : 0.5191    mrr@5 : 0.6981
+Wed 15 Jun 2022 21:13:11 INFO  Saving current: saved\TaNP-Jun-15-2022_21-13-04.pth
+Wed 15 Jun 2022 21:13:14 INFO  epoch 3 training [time: 2.71s, train loss: 1.7416]
+Wed 15 Jun 2022 21:13:14 INFO  epoch 3 evaluating [time: 0.05s, valid_score: 0.673900]
+Wed 15 Jun 2022 21:13:14 INFO  valid result: 
+precision@5 : 0.529    recall@5 : 0.529    hit@5 : 1.0    ndcg@5 : 0.5098    mrr@5 : 0.6739
+Wed 15 Jun 2022 21:13:16 INFO  epoch 4 training [time: 1.86s, train loss: 1.6988]
+Wed 15 Jun 2022 21:13:16 INFO  epoch 4 evaluating [time: 0.04s, valid_score: 0.679300]
+Wed 15 Jun 2022 21:13:16 INFO  valid result: 
+precision@5 : 0.5323    recall@5 : 0.5323    hit@5 : 1.0    ndcg@5 : 0.5141    mrr@5 : 0.6793
+Wed 15 Jun 2022 21:13:17 INFO  epoch 5 training [time: 1.70s, train loss: 1.6689]
+Wed 15 Jun 2022 21:13:17 INFO  epoch 5 evaluating [time: 0.05s, valid_score: 0.690100]
+Wed 15 Jun 2022 21:13:17 INFO  valid result: 
+precision@5 : 0.5258    recall@5 : 0.5258    hit@5 : 1.0    ndcg@5 : 0.5148    mrr@5 : 0.6901
+Wed 15 Jun 2022 21:13:19 INFO  epoch 6 training [time: 1.61s, train loss: 1.6625]
+Wed 15 Jun 2022 21:13:19 INFO  epoch 6 evaluating [time: 0.05s, valid_score: 0.682000]
+Wed 15 Jun 2022 21:13:19 INFO  valid result: 
+precision@5 : 0.5323    recall@5 : 0.5323    hit@5 : 1.0    ndcg@5 : 0.5159    mrr@5 : 0.682
+Wed 15 Jun 2022 21:13:21 INFO  epoch 7 training [time: 1.67s, train loss: 1.6150]
+Wed 15 Jun 2022 21:13:21 INFO  epoch 7 evaluating [time: 0.05s, valid_score: 0.678000]
+Wed 15 Jun 2022 21:13:21 INFO  valid result: 
+precision@5 : 0.5161    recall@5 : 0.5161    hit@5 : 1.0    ndcg@5 : 0.5027    mrr@5 : 0.678
+Wed 15 Jun 2022 21:13:23 INFO  epoch 8 training [time: 1.90s, train loss: 1.6122]
+Wed 15 Jun 2022 21:13:23 INFO  epoch 8 evaluating [time: 0.04s, valid_score: 0.668300]
+Wed 15 Jun 2022 21:13:23 INFO  valid result: 
+precision@5 : 0.5161    recall@5 : 0.5161    hit@5 : 1.0    ndcg@5 : 0.5038    mrr@5 : 0.6683
+Wed 15 Jun 2022 21:13:24 INFO  epoch 9 training [time: 1.73s, train loss: 1.5826]
+Wed 15 Jun 2022 21:13:24 INFO  epoch 9 evaluating [time: 0.04s, valid_score: 0.683900]
+Wed 15 Jun 2022 21:13:24 INFO  valid result: 
+precision@5 : 0.5194    recall@5 : 0.5194    hit@5 : 1.0    ndcg@5 : 0.5103    mrr@5 : 0.6839
+Wed 15 Jun 2022 21:13:26 INFO  epoch 10 training [time: 1.75s, train loss: 1.5695]
+Wed 15 Jun 2022 21:13:26 INFO  epoch 10 evaluating [time: 0.05s, valid_score: 0.693800]
+Wed 15 Jun 2022 21:13:26 INFO  valid result: 
+precision@5 : 0.5161    recall@5 : 0.5161    hit@5 : 1.0    ndcg@5 : 0.5082    mrr@5 : 0.6938
+Wed 15 Jun 2022 21:13:28 INFO  epoch 11 training [time: 2.25s, train loss: 1.5519]
+Wed 15 Jun 2022 21:13:28 INFO  epoch 11 evaluating [time: 0.03s, valid_score: 0.687900]
+Wed 15 Jun 2022 21:13:28 INFO  valid result: 
+precision@5 : 0.5065    recall@5 : 0.5065    hit@5 : 1.0    ndcg@5 : 0.5015    mrr@5 : 0.6879
+Wed 15 Jun 2022 21:13:30 INFO  epoch 12 training [time: 1.53s, train loss: 1.5530]
+Wed 15 Jun 2022 21:13:30 INFO  epoch 12 evaluating [time: 0.05s, valid_score: 0.680600]
+Wed 15 Jun 2022 21:13:30 INFO  valid result: 
+precision@5 : 0.5065    recall@5 : 0.5065    hit@5 : 1.0    ndcg@5 : 0.5013    mrr@5 : 0.6806
+Wed 15 Jun 2022 21:13:32 INFO  epoch 13 training [time: 1.56s, train loss: 1.5305]
+Wed 15 Jun 2022 21:13:32 INFO  epoch 13 evaluating [time: 0.03s, valid_score: 0.689200]
+Wed 15 Jun 2022 21:13:32 INFO  valid result: 
+precision@5 : 0.5032    recall@5 : 0.5032    hit@5 : 1.0    ndcg@5 : 0.4992    mrr@5 : 0.6892
+Wed 15 Jun 2022 21:13:32 INFO  Finished training, best eval result in epoch 2
+Wed 15 Jun 2022 21:13:32 INFO  Loading model structure and parameters from saved\TaNP-Jun-15-2022_21-13-04.pth
+Wed 15 Jun 2022 21:13:32 INFO  best valid result: OrderedDict([('precision@5', 0.5323), ('recall@5', 0.5323), ('hit@5', 1.0), ('ndcg@5', 0.5191), ('mrr@5', 0.6981)])
+Wed 15 Jun 2022 21:13:32 INFO  test result: OrderedDict([('precision@5', 0.5097), ('recall@5', 0.5097), ('hit@5', 1.0), ('ndcg@5', 0.5029), ('mrr@5', 0.6855)])
