@@ -20,13 +20,11 @@ Moreover, we provide a document in detail for researchers.
 
 **Note:** Before starting, it is strongly recommended to realize how RecBole works.
 
-```
 <p align="center">
 <img src="asset/pics/graph.png" alt="graph" width="600" />
 <br>
-  <b>图片</b>: RecBole-MetaRec 总体架构
+  RecBole-MetaRec 总体架构
 </p>
-```
 
 ### Contributions
 
