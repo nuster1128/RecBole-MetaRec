@@ -323,12 +323,16 @@ class MetaParams():
 
 def metaQuickStart(modelName,datasetName):
     trainerName = modelName + 'Trainer'
-    configPath = ['recbole_metarec/model/' + modelName + '/' + modelName + '.yaml']
+    if datasetName != 'book-crossing' and datasetName != 'book-crossing-CTR':
+        configPath = ['recbole_metarec/model/' + modelName + '/' + modelName + '.yaml']
+    else:
+        configPath = ['recbole_metarec/model/' + modelName + '/' + modelName + '-BK.yaml']
+
     trainerClass = importlib.import_module('recbole_metarec.model.' + modelName + '.' + modelName + 'Trainer').__getattribute__(
         modelName + 'Trainer')
     modelClass = importlib.import_module('recbole_metarec.model.' + modelName + '.' + modelName).__getattribute__(modelName)
 
-    config = Config(model=modelClass, dataset=datasetName, config_file_list=configPath)
+    config = Config(model=modelClass, dataset=datasetName, config_file_list=configPath,config_dict={'data_path':'recbole_metarec/dataset/'})
     init_seed(config['seed'], config['reproducibility'])
 
     # logger initialization

@@ -47,10 +47,10 @@ tqdm>=4.62.3
 After the package installation process, you can run the demo code with:
 
 ```
-python run.py
+python quickstart.py
 ```
 
-Also, you can also change the model by modifying `modelName` in `run.py`.
+Also, you can also change the model and the dataset by modifying `modelName`  and `datasetName`in `quickstart.py`.
 
 ### Implemented Models
 
