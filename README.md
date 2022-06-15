@@ -23,7 +23,7 @@ Moreover, we provide a document in detail for researchers.
 <p align="center">
 <img src="asset/pics/graph.png" alt="graph" width="400" />
 <br>
-  RecBole-MetaRec Overall Architecture
+    <b>Figure</b>: RecBole-MetaRec Overall Architecture
 </p>
 
 ### Contributions
