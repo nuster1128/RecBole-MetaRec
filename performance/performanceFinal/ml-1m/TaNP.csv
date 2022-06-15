@@ -1,2 +1,0 @@
-ModelName,Dataset,Detail,precision,recall,hit,ndcg,mrr
-TaNP,ml-1m,embedding(16);train_batch_size(8);lr(0.01);lambda(1.0);,0.6036,0.6036,0.997,0.6145,0.7993
