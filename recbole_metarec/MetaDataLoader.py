@@ -38,14 +38,18 @@ class MetaDataLoader(AbstractDataLoader):
 
     '''
     def __init__(self,config, dataset, sampler, shuffle=False):
-        super(MetaDataLoader, self).__init__(config, dataset, sampler, shuffle)
+        
         if shuffle is False:
-            self.shuffle = True
+            shuffle = True
             self.logger.warning('MetaDataLoader must shuffle the data.')
 
+        self._dataset = dataset
+        self.config = config
         self.uid_field = dataset.uid_field
         self.user_list = self.getTaskIdList()
         self.taskDict=self.transformToTaskFormat()
+        self.sample_size = len(self.user_list)
+        super(MetaDataLoader, self).__init__(config, dataset, sampler, shuffle = shuffle)
 
     def transformToTaskFormat(self):
         '''
@@ -123,26 +127,9 @@ class MetaDataLoader(AbstractDataLoader):
         self.step = batch_size
         self.set_batch_size(batch_size)
 
-    @property
-    def pr_end(self):
-        '''
-        Get the number of tasks(users) .
-        '''
-        return len(self.user_list)
-
-    def _shuffle(self):
-        '''
-        Shuffle the task.
-        '''
-        np.random.shuffle(self.user_list)
-
-    def _next_batch_data(self):
-        '''
-        This function is used to generate a batch of tasks iteratively.
-        :return taskBatch(list) : A list of task. The length is 'train_batch_size'.
-        '''
-        cur_data = self.user_list[self.pr:self.pr + self.step]
+    def collate_fn(self, index):
+        index = np.array(index)
+        cur_data = self.user_list[index]
         taskBatch=[self.taskDict[uid] for uid in cur_data]
-        self.pr += self.step
         return taskBatch
 
