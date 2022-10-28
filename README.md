@@ -42,7 +42,7 @@ The contributions are briefly listed as follows:
 
 ```
 python>=3.7.0
-recbole>=1.0.1
+recbole>=1.1.1
 numpy>=1.20.3
 torch>=1.11.0
 tqdm>=4.62.3
