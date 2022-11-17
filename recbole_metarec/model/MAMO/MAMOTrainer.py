@@ -58,6 +58,7 @@ class MAMOTrainer(MetaTrainer):
         for batch_idx, taskBatch in enumerate(iter_data):
             taskBatch=[self.taskDesolve(task) for task in taskBatch]
             loss, grad = self.model.calculate_loss(taskBatch)
+            totalLoss+=loss
 
             self.model.taskUserEmbedding.load_state_dict(self.model.metaUserEmbedding)
             self.model.taskItemEmbedding.load_state_dict(self.model.metaItemEmbedding)

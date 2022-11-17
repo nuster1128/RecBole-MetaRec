@@ -30,7 +30,7 @@ meta_args:
 alpha: 0.5
 beta: 0.05
 gamma: 0.1
-rho: 0.01
+rho: 0.001
 lambda: 0.05
 tau: 0.01
 k: 3
