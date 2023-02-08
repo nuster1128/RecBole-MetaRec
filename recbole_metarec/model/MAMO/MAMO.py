@@ -158,7 +158,7 @@ class MAMO(MetaRecommender):
         spt_x = torch.cat((spt_x_user, spt_x_item), dim=1)
 
         predict_spt_y = self.taskMamoRec(spt_x)
-        sptLoss = F.mse_loss(predict_spt_y, spt_y)
+        sptLoss = F.mse_loss(predict_spt_y, spt_y.float())
 
         grad = torch.autograd.grad(sptLoss, self.parameters())
         fastweight = OrderedDict()
@@ -186,10 +186,10 @@ class MAMO(MetaRecommender):
         for task in taskBatch:
             (spt_x_user,spt_x_item),spt_y,(qrt_x_user, qrt_x_item),qrt_y = task
             
-            predict_qry_y, gradVecForMU,attention_u,spt_x_userProfile,MuI=self.forward(spt_x_user,spt_x_item, qrt_x_user, qrt_x_item,spt_y)
+            predict_qry_y, gradVecForMU,attention_u,spt_x_userProfile,MuI=self.forward(spt_x_user,spt_x_item, qrt_x_user, qrt_x_item,spt_y.float())
 
             qrt_y=qrt_y.view(-1, 1)
-            qrtLoss = F.mse_loss(predict_qry_y, qrt_y)
+            qrtLoss = F.mse_loss(predict_qry_y, qrt_y.float())
 
             self.MP.update(attention_u,spt_x_userProfile)
             self.MU.update(attention_u,gradVecForMU)

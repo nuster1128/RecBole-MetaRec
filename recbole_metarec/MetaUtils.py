@@ -322,7 +322,6 @@ class MetaParams():
             print(name,value)
 
 def metaQuickStart(modelName,datasetName):
-    trainerName = modelName + 'Trainer'
     if datasetName != 'book-crossing' and datasetName != 'book-crossing-CTR':
         configPath = ['recbole_metarec/model/' + modelName + '/' + modelName + '.yaml']
     else:

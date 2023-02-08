@@ -138,7 +138,7 @@ class TaNP(MetaRecommender):
         for task in taskBatch:
 
             (spt_x_user, spt_x_item), spt_y,(qrt_x_user, qrt_x_item), qrt_y = task
-            spt_y = spt_y.view(-1, 1)
+            spt_y = spt_y.view(-1, 1).float()
 
             spt_x_user=self.taskUserEmbedding.embeddingAllFields(spt_x_user)
             spt_x_item=self.taskItemEmbedding.embeddingAllFields(spt_x_item)
@@ -153,7 +153,7 @@ class TaNP(MetaRecommender):
             o_i=t_i+attentionVec
 
             # Training process
-            qrt_y=qrt_y.view(-1,1)
+            qrt_y=qrt_y.view(-1,1).float()
             qrt_input=torch.cat((qrt_x_user,qrt_x_item,qrt_y),dim=1)
             r_ij=self.encoderMLP1(qrt_input)
             r_i=torch.sum(r_ij,dim=0)/r_ij.shape[0]
@@ -208,7 +208,7 @@ class TaNP(MetaRecommender):
     def predict(self, spt_x,spt_y,qrt_x):
         (spt_x_user, spt_x_item), spt_y,(qrt_x_user, qrt_x_item) = spt_x, spt_y, qrt_x
 
-        spt_y = spt_y.view(-1, 1)
+        spt_y = spt_y.view(-1, 1).float()
 
         spt_x_user = self.taskUserEmbedding.embeddingAllFields(spt_x_user)
         spt_x_item = self.taskItemEmbedding.embeddingAllFields(spt_x_item)

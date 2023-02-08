@@ -76,7 +76,7 @@ class FOMeLU(MetaRecommender):
 
         # Calculate task-specific parameters.
         spt_y_predict = self.model(spt_x)
-        localLoss = F.mse_loss(spt_y_predict, spt_y)
+        localLoss = F.mse_loss(spt_y_predict, spt_y.float())
         self.model.zero_grad()
         grad = torch.autograd.grad(localLoss, self.model.parameters())
 
@@ -104,7 +104,7 @@ class FOMeLU(MetaRecommender):
             fastWeightParams = OrderedDict()
 
             spt_y_predict = self.model(spt_x)
-            localLoss = F.mse_loss(spt_y_predict, spt_y)
+            localLoss = F.mse_loss(spt_y_predict, spt_y.float())
             self.model.zero_grad()
             grad = torch.autograd.grad(localLoss, self.model.parameters(),create_graph=True,retain_graph=True)
             for index, name in enumerate(modelParamNames):
@@ -113,7 +113,7 @@ class FOMeLU(MetaRecommender):
             self.model.load_state_dict(fastWeightParams)
             qrt_y_predict = self.model(qrt_x)
 
-            loss=F.mse_loss(qrt_y_predict,qrt_y)
+            loss=F.mse_loss(qrt_y_predict,qrt_y.float())
 
             self.model.zero_grad()
             gradModel=torch.autograd.grad(loss, self.model.parameters(),create_graph=True,retain_graph=True)

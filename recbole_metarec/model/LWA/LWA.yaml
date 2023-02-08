@@ -1,18 +1,20 @@
 # Dataset config
 USER_ID_FIELD: user_id
 ITEM_ID_FIELD: item_id
-LABEL_FIELD: label
+# RATING_FIELD: rating
 RATING_FIELD: label
 load_col:
+    # inter: [user_id, item_id, rating]
     inter: [user_id, item_id, label]
     item: [item_id,movie_title,release_year,class]
     user: [user_id,age,gender,occupation,zip_code]
 user_inter_num_interval: [13,100]
 
 # Training and evaluation config
-epochs: 50   # 30
+seed: 1128
+epochs: 50
 train_batch_size: 32
-valid_metric: mrr@5
+valid_metric: rmse
 
 # Evaluate config
 eval_args:
@@ -32,6 +34,7 @@ embeddingHiddenDim: 64
 lr: 0.0001
 
 # Metrics
-metrics: ['precision','recall','hit','ndcg','mrr']
+# metrics: ['precision','recall','hit','ndcg']
+metrics: ['rmse']
 metric_decimal_place: 4
 topk: 5

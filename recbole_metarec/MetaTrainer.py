@@ -9,7 +9,7 @@ recbole.MetaModule.MetaTrainer
 
 import torch
 from tqdm import tqdm
-from recbole.utils import set_color, get_gpu_usage
+from recbole.utils import set_color, get_gpu_usage,EvaluatorType
 from recbole.trainer import Trainer
 from recbole_metarec.MetaCollector import MetaCollector
 
@@ -60,22 +60,42 @@ class MetaTrainer(Trainer):
             ) if show_progress else eval_data
         )
 
-        for batch_idx, batched_data in enumerate(iter_data):
-            for task in batched_data:
-                spt_x, spt_y, qrt_x, qrt_y=self.taskDesolve(task)
-                scores=self.model.predict(spt_x,spt_y,qrt_x).squeeze()
-                label = qrt_y.squeeze()
+        if self.config['eval_type'] == EvaluatorType.VALUE:
+            # This is the evaluation process for value evaluation, which we intend to use spt to
+            # fine-tune the meta model and predict scores of given qrts.
+            for batch_idx, batched_data in enumerate(iter_data):
+                for task in batched_data:
+                    spt_x, spt_y, qrt_x, qrt_y=self.taskDesolve(task)
+                    scores=self.model.predict(spt_x,spt_y,qrt_x).squeeze()
+                    label = qrt_y.squeeze()
 
-                if self.gpu_available and show_progress:
-                    iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))
+                    if self.gpu_available and show_progress:
+                        iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))
 
-                self.eval_collector.eval_collect(scores,label)
+                    self.eval_collector.eval_collect(scores,label)
 
-        struct = self.eval_collector.get_data_struct()
-        result = self.evaluator.evaluate(struct)
-        self.wandblogger.log_eval_metrics(result, head='eval')
+            struct = self.eval_collector.get_data_struct()
+            result = self.evaluator.evaluate(struct)
+            self.wandblogger.log_eval_metrics(result, head='eval')
 
-        return result
+            return result
+        if self.config['eval_type'] == EvaluatorType.RANKING:
+            for batch_idx, batched_data in enumerate(iter_data):
+                for task in batched_data:
+                    spt_x, spt_y, qrt_x, qrt_y = self.taskDesolve(task)
+                    scores = self.model.predict(spt_x, spt_y, qrt_x).squeeze()
+                    label = qrt_y.squeeze()
+
+                    if self.gpu_available and show_progress:
+                        iter_data.set_postfix_str(set_color('GPU RAM: ' + get_gpu_usage(self.device), 'yellow'))
+
+                    self.eval_collector.eval_collect(scores, label)
+
+            struct = self.eval_collector.get_data_struct()
+            result = self.evaluator.evaluate(struct)
+            self.wandblogger.log_eval_metrics(result, head='eval')
+
+            return result
 
     def taskDesolve(self,task):
         '''
